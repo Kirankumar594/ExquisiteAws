@@ -96,10 +96,17 @@ app.use('/api/pass-movies', passMovieRoutes);
 app.use('/api/music-names', musicNameRoutes);
 app.use('/api/music-sections', musicSectionRoutes);   
  
-app.get('/', (req, res) => {
-  res.send('🚀 Exquisite Backend is Running');
-});
+// app.get('/', (req, res) => {
+//   res.send('🚀 Exquisite Backend is Running');
+// });
+ 
+app.use(express.static(path.join(__dirname, 'build'))); // Change 'build' to your frontend folder if needed
 
+// Redirect all requests to the index.html file
+
+app.get("*", (req, res) => {
+  return  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 // Start server
 const PORT = process.env.PORT;
