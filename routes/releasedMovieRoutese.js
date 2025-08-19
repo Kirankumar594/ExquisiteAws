@@ -7,8 +7,8 @@ import {
   deleteReleasedMovie,
 } from '../controllers/releasedMovieControllers.js';
 import multer from 'multer';
-// import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
-const uploadReleasedMovie=multer();
+import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
+// const uploadReleasedMovie=multer();
 const router = express.Router();
 
 router.post('/', uploadReleasedMovie, createReleasedMovie);
