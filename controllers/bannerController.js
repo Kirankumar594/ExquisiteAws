@@ -2,6 +2,7 @@ import Banner from '../models/BannerModel.js';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { uploadFile2 } from '../middleware/aws.js';
 
 // Get the current module's directory path
 const __filename = fileURLToPath(import.meta.url);

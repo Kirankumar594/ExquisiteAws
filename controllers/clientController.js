@@ -2,6 +2,7 @@ import ClientModel from "../models/ClientModel.js"
 import  {uploadSingle}  from "../middleware/upload.js" 
 import fs from "fs"
 import path from "path"
+import { uploadFile2 } from "../middleware/aws.js"
 
 export const createClient = async (req, res) => {
   // Use multer middleware
@@ -20,9 +21,9 @@ export const createClient = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ message: "Image is required" })
       }
-
+      const image=await uploadFile2(req.file,"client")
       const newClient = new ClientModel({
-        image: req.file.filename, // Store just the filename
+        image: image, // Store just the filename
         name,
         title,
         description,
@@ -65,7 +66,7 @@ export const updateClient = async (req, res) => {
 
       // If new image is uploaded, update image path
       if (req.file) {
-        updateData.image = req.file.filename
+        updateData.image = await uploadFile2(req.file,"client")
 
         // Delete old image file
         const oldClient = await ClientModel.findById(id)

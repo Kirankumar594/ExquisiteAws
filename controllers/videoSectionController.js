@@ -18,7 +18,7 @@ export const createVideoSection = async (req, res) => {
     if (!title || !pageId || !image || !video) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-
+      
     const newSection = new VideoSection({ title, pageId, image, video });
     await newSection.save();
     res.status(201).json(newSection);
