@@ -8,8 +8,8 @@ export const createReleasedMovie = async (req, res) => {
     const { title, isNew, description } = req.body;
 
 
-    const imageFile = req.files?.image?.[0]?.filename ? await uploadFile2(req.files?.image?.[0],"releasemovies"):"";
-    const videoFile = req.files?.video?.[0]?.filename ? await uploadFile2(req.files?.video?.[0],"releasemovies"):"";
+    const imageFile = req.files?.image.filename ? await uploadFile2(req.files?.image,"releasemovies"):"";
+    const videoFile = req.files?.video.filename ? await uploadFile2(req.files?.video,"releasemovies"):"";
 
     if (!imageFile || !videoFile) {
       return res.status(400).json({ message: 'Image and video are required.' });
@@ -60,16 +60,16 @@ export const updateReleasedMovie = async (req, res) => {
 
     const { title, isNew, description } = req.body;
 
-    if (req.files?.image?.[0]) {
+    if (req.files?.image) {
       // Delete old image
     
-      movie.image = req.files?.image?.[0]?.filename ? await uploadFile2(req.files?.image?.[0],"releasemovies"):"";
+      movie.image = req.files?.image?.filename ? await uploadFile2(req.files?.image,"releasemovies"):"";
     }
 
-    if (req.files?.video?.[0]) {
+    if (req.files?.video) {
       // Delete old video
     
-      movie.video = req.files?.video?.[0]?.filename ? await uploadFile2(req.files?.video?.[0],"releasemovies"):"";
+      movie.video = req.files?.video?.filename ? await uploadFile2(req.files?.video,"releasemovies"):"";
     }
 
     movie.title = title ?? movie.title;
