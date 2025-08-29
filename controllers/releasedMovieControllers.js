@@ -66,16 +66,16 @@ export const updateReleasedMovie = async (req, res) => {
 
     const { title, isNew, description } = req.body;
 
-    if (req.files?.image) {
+    if (req.files?.image?.[0]) {
       // Delete old image
     
-      movie.image = req.files?.image?.filename ? await uploadFile2(req.files?.image,"releasemovies"):"";
+      movie.image =  await uploadFile2(req.files?.image[0],"releasemovies");
     }
 
-    if (req.files?.video) {
+    if (req.files?.video?.[0]) {
       // Delete old video
     
-      movie.video = req.files?.video?.filename ? await uploadFile2(req.files?.video,"releasemovies"):"";
+      movie.video =  await uploadFile2(req.files?.video[0],"releasemovies");
     }
 
     movie.title = title ?? movie.title;
