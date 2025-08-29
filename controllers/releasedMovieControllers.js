@@ -7,6 +7,7 @@ export const createReleasedMovie = async (req, res) => {
   try {
     const { title, isNew, description } = req.body;
 
+      console.log("check==>",req.files);
 
     const imageFile = req.files?.image.filename ? await uploadFile2(req.files?.image,"releasemovies"):"";
     const videoFile = req.files?.video.filename ? await uploadFile2(req.files?.video,"releasemovies"):"";
