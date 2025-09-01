@@ -7,9 +7,9 @@ import multer from 'multer';
 const router = express.Router();
 const upload=multer();
 // Use uploadSingle middleware for the create route
-router.post('/', upload.single('image'), createGallery);
+router.post('/', upload.any(), createGallery);
 router.get('/', getAllGallery);
-router.put('/:id', upload.single('image'),updateGallery);
+router.put('/:id', upload.any(),updateGallery);
 router.delete('/:id', deleteGallery);
 
 export default router;

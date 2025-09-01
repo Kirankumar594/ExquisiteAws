@@ -4,10 +4,10 @@ import TopProject from '../models/TopProject.js';
 // Create new TopProject
 export const createTopProject = async (req, res) => {
   try {
-    const { name, location, flat, amount } = req.body;
+    const { name, location } = req.body;
     const image = req.file ? await uploadFile2(req.file,"project"): null;
 
-    if (!name || !location || !flat || !amount || !image) {
+    if (!name || !location || !image) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
@@ -15,8 +15,8 @@ export const createTopProject = async (req, res) => {
       image,
       name,
       location,
-      flat,
-      amount,
+      // flat,
+      // amount,
     });
 
     await newProject.save();
@@ -50,14 +50,14 @@ export const getTopProjectById = async (req, res) => {
 // Update TopProject by ID
 export const updateTopProject = async (req, res) => {
   try {
-    const { name, location, flat, amount } = req.body;
+    const { name, location } = req.body;
     const image = req.file ?  await uploadFile2(req.file,"project"):undefined
 
     const updateData = {};
     if (name) updateData.name = name;
     if (location) updateData.location = location;
-    if (flat) updateData.flat = flat;
-    if (amount) updateData.amount = amount;
+    // if (flat) updateData.flat = flat;
+    // if (amount) updateData.amount = amount;
     if (image) updateData.image = image;
 
     const updatedProject = await TopProject.findByIdAndUpdate(req.params.id, updateData, { new: true });
