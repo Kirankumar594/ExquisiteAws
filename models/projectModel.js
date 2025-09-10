@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const projectSchema = new mongoose.Schema({
   category: {
     type: String,
-    enum: ['Real Estate', 'Interior'],
+    enum: ['Construction', 'Interior'],
     required: true,
   },
   title: {

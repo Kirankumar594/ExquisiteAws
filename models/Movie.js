@@ -15,7 +15,7 @@ const movieSchema = new mongoose.Schema(
     duration: { type: String, required: true },
     rating_score: { type: Number, min: 0, max: 10 },
     image: { type: String, required: true },
-    video: { type: String, required: true },
+    video: { type: String, required: false },
     description: { type: String, required: true },
   },
   { timestamps: true }

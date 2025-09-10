@@ -12,13 +12,17 @@ const deleteFile = (filename) => {
 export const createVideoSection = async (req, res) => {
   try {
     const { title, pageId } = req.body;
-    const image = req.files['image']?.[0]?.filename ? await uploadFile2(req.files['image']?.[0],"videosection"):"";
-    const video = req.files['video']?.[0]?.filename ? await uploadFile2(req.files['video'][0],"videosection"):"";
+ const image = req.files?.image?.[0]
+  ? await uploadFile2(req.files.image[0], "releasemovies")
+  : "";
 
+const video = req.files?.video?.[0]
+  ? await uploadFile2(req.files.video[0], "releasemovies")
+  : "";
     if (!title || !pageId || !image || !video) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-
+      
     const newSection = new VideoSection({ title, pageId, image, video });
     await newSection.save();
     res.status(201).json(newSection);
@@ -66,9 +70,13 @@ export const updateVideoSection = async (req, res) => {
     const section = await VideoSection.findById(req.params.id);
     if (!section) return res.status(404).json({ message: 'Not found' });
 
-      const image = req.files['image']?.[0]?.filename ? await uploadFile2(req.files['image']?.[0],"videosection"):"";
-    const video = req.files['video']?.[0]?.filename ? await uploadFile2(req.files['video'][0],"videosection"):"";
+ const image = req.files?.image?.[0]
+  ? await uploadFile2(req.files.image[0], "releasemovies")
+  : "";
 
+const video = req.files?.video?.[0]
+  ? await uploadFile2(req.files.video[0], "releasemovies")
+  : "";
     // if (image && section.image) deleteFile(section.image);
     // if (video && section.video) deleteFile(section.video);
 

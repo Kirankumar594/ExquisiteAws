@@ -15,15 +15,15 @@ const topProjectSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  flat: {
-    type: String, // e.g., '2bhk', '3bhk'
-    required: true,
-    trim: true,
-  },
-  amount: {
-    type: String,
-    required: true,
-  },
+  // flat: {
+  //   type: String, // e.g., '2bhk', '3bhk'
+  //   required: true,
+  //   trim: true,
+  // },
+  // amount: {
+  //   type: String,
+  //   required: true,
+  // },
 }, {
   timestamps: true,
 });
