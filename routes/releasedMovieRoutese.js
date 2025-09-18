@@ -11,16 +11,10 @@ import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
 
 const router = express.Router();
 
-router.post('/', uploadReleasedMovie.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 },
-  ]), createReleasedMovie);
+router.post('/', uploadReleasedMovie, createReleasedMovie);
 router.get('/', getAllReleasedMovies);
 router.get('/:id', getReleasedMovieById);
-router.put('/:id', uploadReleasedMovie.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 },
-  ]), updateReleasedMovie);
+router.put('/:id', uploadReleasedMovie, updateReleasedMovie);
 router.delete('/:id', deleteReleasedMovie);
 
 export default router;
