@@ -1,17 +1,24 @@
 import mongoose from 'mongoose';
 
 const gallerySchema = new mongoose.Schema({
-  image: {
-    type: String,
-    required: true,
-  },
+  images: [
+    {
+      url: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        default: "",
+      }
+    }
+  ],
   title: {
     type: String,
     required: true,
   },
   category: {
     type: String,
-    enum: ['All', 'Residential Project', 'Interior', 'Wooden Carving'],
     required: true,
   },
 });
