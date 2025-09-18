@@ -2,6 +2,8 @@
 import Movie from '../models/Movie.js';
 import fs from 'fs';
 
+import { uploadFile2 } from '../middleware/aws.js';
+
 // CREATE
 export const createMovie = async (req, res) => {
   try {
@@ -18,7 +20,7 @@ export const createMovie = async (req, res) => {
       youtubeLink,
     } = req.body;
 
-    const image = req.files?.image?.[0]?.path.replace(/\\/g, '/');
+    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : "";
 
     let video = "";
     if (type === 'file') {
@@ -91,6 +93,8 @@ export const updateMovie = async (req, res) => {
       type,
       youtubeLink,
     } = req.body;
+
+    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : movie.image;
 
     if (req.files?.image?.[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);

@@ -1,6 +1,6 @@
 
 import express from 'express';
-import upload from '../middleware/upload.js';
+// import upload from '../middleware/upload.js';
 import {
   createMovie,
   getAllMovies,
@@ -8,6 +8,8 @@ import {
   updateMovie,
   deleteMovie,
 } from '../controllers/movieController.js';
+import multer from 'multer';
+const upload=multer();
 
 const router = express.Router();
 

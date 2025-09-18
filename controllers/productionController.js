@@ -1,12 +1,14 @@
 import ProductionSection from '../models/ProductionSection.js';
 import fs from 'fs';
 import path from 'path';
+import { uploadFile2 } from '../middleware/aws.js';
 
 // CREATE
 export const createProduction = async (req, res) => {
   try {
     const { title, subtitle, description } = req.body;
-    const imagePaths = req.files.map(file => file.path);
+    const imageFiles = req.files ? req.files['image'] : [];
+    const imagePaths = await Promise.all(imageFiles.map(file => uploadFile2(file,"media")));  
 
     const newItem = new ProductionSection({
       title,
@@ -57,11 +59,12 @@ export const updateProduction = async (req, res) => {
       });
     }
 
-    const newImages = req.files.map(file => file.path);
+    const imageFiles = req.files ? req.files['image'] : [];
+    const imagePaths = await Promise.all(imageFiles.map(file => uploadFile2(file,"media")));  
     item.title = title;
     item.subtitle = subtitle;
     item.description = description;
-    item.images = newImages.length > 0 ? newImages : item.images;
+    item.images = imagePaths.length > 0 ? imagePaths : item.images;
 
     const updated = await item.save();
     res.status(200).json(updated);

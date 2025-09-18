@@ -1,14 +1,15 @@
 
 import VideoGridHome from '../models/videoGridHomeModel.js';
 import fs from 'fs';
+import { uploadFile2 } from '../middleware/aws.js';
 
 // CREATE
 export const createVideoGridHome = async (req, res) => {
   try {
     const { title, views, type, youtubeLink } = req.body;
 
-    const imageFile = req.files?.image?.[0];
-    const videoFile = req.files?.video?.[0];
+    const imageFile = req.files ? await uploadFile2(req.files['image'][0],"media") : null;
+    const videoFile = req.files ? await uploadFile2(req.files['video'][0],"media") : null;
 
     if (!imageFile || (type === 'file' && !videoFile) || (type === 'youtube' && !youtubeLink)) {
       return res.status(400).json({ message: 'Image and video (file or YouTube link) are required.' });
@@ -62,12 +63,12 @@ export const updateVideoGridHome = async (req, res) => {
 
     if (req.files?.image?.[0]) {
       if (fs.existsSync(item.image)) fs.unlinkSync(item.image);
-      item.image = req.files.image[0].path;
+      item.image = await uploadFile2(req.files['image'][0],"media");
     }
 
     if (type === 'file' && req.files?.video?.[0]) {
       if (fs.existsSync(item.video)) fs.unlinkSync(item.video);
-      item.video = req.files.video[0].path;
+      item.video = await uploadFile2(req.files['video'][0],"media");
     }
 
     item.title = title ?? item.title;

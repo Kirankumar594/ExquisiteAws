@@ -1,5 +1,5 @@
 import express from 'express';
-import { upload } from '../middleware/video.js';
+// import { upload } from '../middleware/video.js';
 import {
   createMediaSection,
   getAllMediaSections,
@@ -8,8 +8,12 @@ import {
   updateMediaSection,
   deleteMediaSection
 } from '../controllers/mediaSectionController.js';
+import multer from 'multer';
+
+const upload = multer();  
 
 const router = express.Router();
+
 
 const uploadFields = upload.fields([
   { name: 'image', maxCount: 1 },

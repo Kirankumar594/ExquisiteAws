@@ -1,6 +1,7 @@
 import MediaSection from '../models/MediaSection.js';
 import fs from 'fs';
 import path from 'path';
+import { uploadFile2 } from '../middleware/aws.js';
 
 const deleteFile = (filename) => {
   if (!filename) return;
@@ -12,8 +13,8 @@ const deleteFile = (filename) => {
 export const createMediaSection = async (req, res) => {
   try {
     const { title, pageId, type, youtubeLink } = req.body;
-    const image = req.files['image']?.[0]?.filename;
-    const media = req.files['media']?.[0]?.filename;
+    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : "";
+    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : "";
 
     if (!title || !pageId || !type || !image || (!media && !youtubeLink)) {
       return res.status(400).json({ message: 'All required fields are not provided' });
@@ -69,8 +70,8 @@ export const updateMediaSection = async (req, res) => {
     const section = await MediaSection.findById(req.params.id);
     if (!section) return res.status(404).json({ message: 'Section not found' });
 
-    const image = req.files['image']?.[0]?.filename;
-    const media = req.files['media']?.[0]?.filename;
+    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : section.image;
+    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : section.media;
 
     if (image && section.image) deleteFile(section.image);
     if (media && section.media && section.type !== 'youtube') deleteFile(section.media);

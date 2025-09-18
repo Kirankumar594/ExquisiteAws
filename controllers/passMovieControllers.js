@@ -3,13 +3,15 @@
 import PassMovie from '../models/passMovieModel.js';
 import fs from 'fs';
 
+import { uploadFile2 } from '../middleware/aws.js';
+
 // CREATE
 export const createPassMovie = async (req, res) => {
   try {
     const { title, description, isNew, type, youtubeLink } = req.body;
 
-    const imageFile = req.files?.image?.[0];
-    const videoFile = req.files?.video?.[0];
+    const imageFile = req.files ? await uploadFile2(req.files['image'][0],"media") : null;
+    const videoFile = req.files ? await uploadFile2(req.files['video'][0],"media") : null;
 
     if (!imageFile || (type === 'file' && !videoFile) || (type === 'youtube' && !youtubeLink)) {
       return res.status(400).json({ message: 'Thumbnail image and either YouTube link or video file are required.' });
@@ -44,12 +46,12 @@ export const updatePassMovie = async (req, res) => {
 
     if (req.files?.image?.[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);
-      movie.image = req.files.image[0].path;
+      movie.image = await uploadFile2(req.files['image'][0],"media");
     }
 
     if (type === 'file' && req.files?.video?.[0]) {
       if (fs.existsSync(movie.video)) fs.unlinkSync(movie.video);
-      movie.video = req.files.video[0].path;
+      movie.video = await uploadFile2(req.files['video'][0],"media");
     }
 
     movie.title = title ?? movie.title;
