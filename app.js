@@ -20,7 +20,7 @@ import interiorPortfolioRoutes from './routes/interiorPortfolioRoutes.js';
 import adminRoutes from './routes/adminRoutes.js'
 // import bannerRoutes from './routes/bannerRoutes.js';
 import pageNameRoutes from './routes/pageNameRoutes.js'
-import videoSectionRoutes from './routes/videoSectionRoutes.js'
+import mediaSectionRoutes from './routes/mediaSectionRoutes.js'
 import productionRoutes from './routes/productionRoutes.js'
 import movieRoutes from './routes/movieRoutes.js'
 import releasedMovieRoutese from './routes/releasedMovieRoutese.js'
@@ -84,17 +84,17 @@ app.use('/api/interiorportfolio', interiorPortfolioRoutes);
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/pagenames', pageNameRoutes);
-app.use('/api/videosections', videoSectionRoutes);
+app.use('/api/media-sections', mediaSectionRoutes);
+app.use('/api/music-names', musicNameRoutes);
+app.use('/api/music-sections', musicSectionRoutes);
 app.use('/api/productions', productionRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/released-movies', releasedMovieRoutese);
-app.use('/api/video-grid-home', videoGridHomeRoutes);
-app.use('/api/contact-info', contactInfoRoutes);
-app.use('/api/map-embed', mapEmbedRoutes);
 app.use('/api/upcoming-movies', upcomingMovieRoutes);
 app.use('/api/pass-movies', passMovieRoutes);
-app.use('/api/music-names', musicNameRoutes);
-app.use('/api/music-sections', musicSectionRoutes);   
+app.use('/api/video-grid-home', videoGridHomeRoutes);
+app.use('/api/contact-info', contactInfoRoutes);
+app.use('/api/map-embed', mapEmbedRoutes); 
  
 // app.get('/', (req, res) => {
 //   res.send('🚀 Exquisite Backend is Running');

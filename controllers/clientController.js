@@ -1,5 +1,5 @@
 import ClientModel from "../models/ClientModel.js"
-import  {uploadSingle}  from "../middleware/upload.js" 
+import  {uploadSingle}  from "../middleware/uplodes.js" 
 import fs from "fs"
 import path from "path"
 import { uploadFile2 } from "../middleware/aws.js"

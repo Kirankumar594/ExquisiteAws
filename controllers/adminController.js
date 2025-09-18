@@ -18,6 +18,7 @@ export const registerAdmin = async (req, res) => {
     res.status(201).json({ msg: 'Admin created successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+    
   }
 };
 

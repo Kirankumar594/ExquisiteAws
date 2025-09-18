@@ -1,24 +1,27 @@
-import { uploadFile2 } from '../middleware/aws.js';
+
 import VideoGridHome from '../models/videoGridHomeModel.js';
 import fs from 'fs';
 
 // CREATE
 export const createVideoGridHome = async (req, res) => {
   try {
-    const { title, views } = req.body;
+    const { title, views, type, youtubeLink } = req.body;
 
-    const imageFile = req.files?.image?.[0] ? await uploadFile2(req.files?.image?.[0],"upcoming"):"";
-      const videoFile = req.files?.video?.[0] ? await uploadFile2(req.files?.video[0],"upcoming"):"";
+    const imageFile = req.files?.image?.[0];
+    const videoFile = req.files?.video?.[0];
 
-    if (!imageFile || !videoFile) {
-      return res.status(400).json({ message: 'Image and video are required.' });
+    if (!imageFile || (type === 'file' && !videoFile) || (type === 'youtube' && !youtubeLink)) {
+      return res.status(400).json({ message: 'Image and video (file or YouTube link) are required.' });
     }
+
+    const videoSource = type === 'youtube' ? youtubeLink : videoFile.path;
 
     const newEntry = new VideoGridHome({
       title,
       views: views || 0,
-      image: imageFile,
-      video: videoFile,
+      image: imageFile.path,
+      video: videoSource,
+      type,
     });
 
     const saved = await newEntry.save();
@@ -55,20 +58,22 @@ export const updateVideoGridHome = async (req, res) => {
     const item = await VideoGridHome.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
 
-    const { title, views } = req.body;
+    const { title, views, type, youtubeLink } = req.body;
 
     if (req.files?.image?.[0]) {
-      // if (fs.existsSync(item.image)) fs.unlinkSync(item.image);
-      item.image = await uploadFile2(req.files?.image?.[0],"upcoming")
+      if (fs.existsSync(item.image)) fs.unlinkSync(item.image);
+      item.image = req.files.image[0].path;
     }
 
-    if (req.files?.video?.[0]) {
-      // if (fs.existsSync(item.video)) fs.unlinkSync(item.video);
-      item.video = await uploadFile2(req.files?.video[0],"upcoming")
+    if (type === 'file' && req.files?.video?.[0]) {
+      if (fs.existsSync(item.video)) fs.unlinkSync(item.video);
+      item.video = req.files.video[0].path;
     }
 
     item.title = title ?? item.title;
     item.views = views ?? item.views;
+    item.type = type;
+    item.video = type === 'youtube' ? youtubeLink : (req.files?.video?.[0]?.path ?? item.video);
 
     const updated = await item.save();
     res.json(updated);
@@ -83,8 +88,8 @@ export const deleteVideoGridHome = async (req, res) => {
     const item = await VideoGridHome.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
 
-    // if (fs.existsSync(item.image)) fs.unlinkSync(item.image);
-    // if (fs.existsSync(item.video)) fs.unlinkSync(item.video);
+    if (fs.existsSync(item.image)) fs.unlinkSync(item.image);
+    if (item.type === 'file' && fs.existsSync(item.video)) fs.unlinkSync(item.video);
 
     await item.deleteOne();
     res.json({ message: 'Deleted successfully' });

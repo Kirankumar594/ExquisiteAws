@@ -1,4 +1,4 @@
-// models/Movie.js
+
 import mongoose from 'mongoose';
 
 const movieSchema = new mongoose.Schema(
@@ -14,8 +14,9 @@ const movieSchema = new mongoose.Schema(
     genre: { type: [String], required: true },
     duration: { type: String, required: true },
     rating_score: { type: Number, min: 0, max: 10 },
+    type: { type: String, enum: ['file', 'youtube'], required: true },
     image: { type: String, required: true },
-    video: { type: String, required: false },
+    video: { type: String, required: true },
     description: { type: String, required: true },
   },
   { timestamps: true }
