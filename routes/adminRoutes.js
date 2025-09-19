@@ -3,7 +3,7 @@ import { registerAdmin, loginAdmin } from '../controllers/adminController.js';
 
 const router = express.Router();
 
-router.post('/register', registerAdmin);  // optional, disable after first admin
+router.post('/register', registerAdmin); // optional, only first admin
 router.post('/login', loginAdmin);
 
 export default router;
