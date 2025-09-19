@@ -4,24 +4,45 @@ import fs from 'fs';
 import { uploadFile2 } from '../middleware/aws.js';
 
 // CREATE
+
+
 export const createVideoGridHome = async (req, res) => {
   try {
     const { title, views, type, youtubeLink } = req.body;
 
-    const imageFile = req.files ? await uploadFile2(req.files['image'][0],"media") : null;
-    const videoFile = req.files ? await uploadFile2(req.files['video'][0],"media") : null;
+    let imageFile = null;
+    let videoFile = null;
 
-    if (!imageFile || (type === 'file' && !videoFile) || (type === 'youtube' && !youtubeLink)) {
-      return res.status(400).json({ message: 'Image and video (file or YouTube link) are required.' });
+    // ✅ Upload image
+    if (req.files?.image?.[0]) {
+      imageFile = await uploadFile2(req.files.image[0], "media");
     }
 
-    const videoSource = type === 'youtube' ? youtubeLink : videoFile.path;
+    // ✅ Upload video
+    if (req.files?.video?.[0]) {
+      videoFile = await uploadFile2(req.files.video[0], "media");
+    }
 
+    // ✅ Validation
+    if (
+      !imageFile ||
+      (type === "file" && !videoFile) ||
+      (type === "youtube" && !youtubeLink)
+    ) {
+      return res.status(400).json({
+        message: "Image and video (file or YouTube link) are required.",
+      });
+    }
+
+    // ✅ Pick video source
+    const videoSource = type === "youtube" ? youtubeLink : videoFile;
+
+    // ✅ Create new entry
     const newEntry = new VideoGridHome({
       title,
       views: views || 0,
-      image: imageFile.path,
-      video: videoSource,
+      image: imageFile, // ✅ save S3 URL directly
+      video: videoSource, // ✅ save S3 URL or YouTube link
       type,
     });
 
@@ -31,6 +52,7 @@ export const createVideoGridHome = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // GET ALL
 export const getAllVideoGridHome = async (req, res) => {

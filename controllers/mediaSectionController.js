@@ -13,8 +13,14 @@ const deleteFile = (filename) => {
 export const createMediaSection = async (req, res) => {
   try {
     const { title, pageId, type, youtubeLink } = req.body;
-    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : "";
-    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : "";
+   const image = req.files && req.files['image'] 
+  ? await uploadFile2(req.files['image'][0], "media") 
+  : "";
+
+const media = req.files && req.files['media'] 
+  ? await uploadFile2(req.files['media'][0], "media") 
+  : "";
+
 
     if (!title || !pageId || !type || !image || (!media && !youtubeLink)) {
       return res.status(400).json({ message: 'All required fields are not provided' });
@@ -27,6 +33,7 @@ export const createMediaSection = async (req, res) => {
     await newSection.populate('pageId', 'title');
     res.status(201).json(newSection);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error creating section', error });
   }
 };

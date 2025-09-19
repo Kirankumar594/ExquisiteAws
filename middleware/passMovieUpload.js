@@ -66,7 +66,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 export const uploadPassMovie = multer({
-  storage,
+
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB max
 }).fields([

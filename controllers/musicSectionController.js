@@ -14,8 +14,13 @@ const deleteFile = (filename) => {
 export const createMusicSection = async (req, res) => {
   try {
     const { title, musicId, type, youtubeLink } = req.body;
-    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : "";
-    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : "";
+    const image = req.files && req.files['image'] 
+  ? await uploadFile2(req.files['image'][0], "media") 
+  : "";
+
+const media = req.files && req.files['media'] 
+  ? await uploadFile2(req.files['media'][0], "media") 
+  : "";
 
     if (!title || !musicId || !type || !image || (!media && !youtubeLink)) {
       return res.status(400).json({ message: 'All required fields are not provided' });
@@ -81,13 +86,18 @@ export const updateMusicSection = async (req, res) => {
     const section = await MusicSection.findById(req.params.id);
     if (!section) return res.status(404).json({ message: 'Not found' });
 
-    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : "";
-    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : "";
+      const image = req.files && req.files['image'] 
+  ? await uploadFile2(req.files['image'][0], "media") 
+  : "";
+
+const media = req.files && req.files['media'] 
+  ? await uploadFile2(req.files['media'][0], "media") 
+  : "";
 
     if (image && section.image) deleteFile(section.image);
     if (media && section.media && section.type !== 'youtube') deleteFile(section.media);
-    if (image) section.image = await uploadFile2(req.files['image'][0],"media");
-    if (media) section.media = await uploadFile2(req.files['media'][0],"media");
+    if (image) section.image = image;
+    if (media) section.media = media;
 
     section.title = title || section.title;
     section.musicId = musicId || section.musicId;

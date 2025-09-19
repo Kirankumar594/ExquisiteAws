@@ -7,8 +7,11 @@ import { uploadFile2 } from '../middleware/aws.js';
 export const createProduction = async (req, res) => {
   try {
     const { title, subtitle, description } = req.body;
-    const imageFiles = req.files ? req.files['image'] : [];
-    const imagePaths = await Promise.all(imageFiles.map(file => uploadFile2(file,"media")));  
+  const imageFiles = req.files || [];
+
+    const imagePaths = await Promise.all(
+      imageFiles.map(file => uploadFile2(file, "media"))
+    );  
 
     const newItem = new ProductionSection({
       title,
@@ -53,18 +56,21 @@ export const updateProduction = async (req, res) => {
     if (!item) return res.status(404).json({ message: 'Not found' });
 
     // Delete old images if new images uploaded
-    if (req.files.length > 0) {
+    if (req.files && req.files.length > 0 && item.images?.length) {
       item.images.forEach(imgPath => {
         if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
       });
     }
 
-    const imageFiles = req.files ? req.files['image'] : [];
-    const imagePaths = await Promise.all(imageFiles.map(file => uploadFile2(file,"media")));  
+    const imageFiles = req.files || []; // array of uploaded files
+    const imagePaths = await Promise.all(
+      imageFiles.map(file => uploadFile2(file, "media"))
+    );
+
     item.title = title;
     item.subtitle = subtitle;
     item.description = description;
-    item.images = imagePaths.length > 0 ? imagePaths : item.images;
+    item.images = imagePaths.length > 0 ? imagePaths : item.images || [];
 
     const updated = await item.save();
     res.status(200).json(updated);
@@ -72,6 +78,7 @@ export const updateProduction = async (req, res) => {
     res.status(500).json({ message: 'Failed to update', error: err.message });
   }
 };
+
 
 // DELETE
 export const deleteProduction = async (req, res) => {

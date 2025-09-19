@@ -98,13 +98,13 @@ export const updateMovie = async (req, res) => {
 
     if (req.files?.image?.[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);
-      movie.image = req.files.image[0].path.replace(/\\/g, '/');
+      movie.image = req.files? await uploadFile2(req.files['image'][0],"media") : movie.image;
     }
 
     if (type === 'file') {
       if (req.files?.video?.[0]) {
         if (movie.video && fs.existsSync(movie.video)) fs.unlinkSync(movie.video);
-        movie.video = req.files.video[0].path.replace(/\\/g, '/');
+        movie.video = await uploadFile2(req.files.video[0],"media");
       }
     } else if (type === 'youtube') {
       movie.video = youtubeLink;

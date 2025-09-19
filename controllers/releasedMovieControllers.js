@@ -9,21 +9,31 @@ export const createReleasedMovie = async (req, res) => {
   try {
     const { title, description, isNew, type, youtubeLink } = req.body;
 
-    const imageFile = req.files ? await uploadFile2(req.files['image'][0],"media") : null;
-    const videoFile = req.files ? await uploadFile2(req.files['video'][0],"media") : null;
+    let imageFile = null;
+    let videoFile = null;
 
-    if (!imageFile || (type === 'file' && !videoFile) || (type === 'youtube' && !youtubeLink)) {
-      return res.status(400).json({ message: 'Thumbnail image and either YouTube link or video file are required.' });
+    if (req.files?.image?.[0]) {
+      imageFile = await uploadFile2(req.files.image[0], "media");
     }
 
-    const videoSource = type === 'youtube' ? youtubeLink : videoFile.path;
+    if (req.files?.video?.[0]) {
+      videoFile = await uploadFile2(req.files.video[0], "media");
+    }
+
+    if (!imageFile || (type === "file" && !videoFile) || (type === "youtube" && !youtubeLink)) {
+      return res.status(400).json({
+        message: "Thumbnail image and either YouTube link or video file are required.",
+      });
+    }
+
+    const videoSource = type === "youtube" ? youtubeLink : videoFile;
 
     const newMovie = new ReleasedMovie({
       title,
       description,
-      isNew: isNew === 'true' || isNew === true,
-      image: imageFile.path,
-      video: videoSource,
+      isNew: isNew === "true" || isNew === true,
+      image: imageFile, // store S3 URL
+      video: videoSource, // S3 URL or YouTube link
       type,
     });
 

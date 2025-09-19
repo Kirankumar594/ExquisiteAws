@@ -27,7 +27,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 export const uploadVideoGridHome = multer({
-  storage,
+  
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
 }).fields([
