@@ -71,31 +71,74 @@ export const getMediaSectionsByPageId = async (req, res) => {
 };
 
 // UPDATE
+// export const updateMediaSection = async (req, res) => {
+//   try {
+//     const { title, pageId, type, youtubeLink } = req.body;
+//     const section = await MediaSection.findById(req.params.id);
+//     if (!section) return res.status(404).json({ message: 'Section not found' });
+
+//     const image = req.files ? await uploadFile2(req.files['image'][0],"media") : section.image;
+//     const media = req.files ? await uploadFile2(req.files['media'][0],"media") : section.media;
+
+//     if (image && section.image) deleteFile(section.image);
+//     if (media && section.media && section.type !== 'youtube') deleteFile(section.media);
+
+//     section.title = title || section.title;
+//     section.pageId = pageId || section.pageId;
+//     section.type = type || section.type;
+//     if (image) section.image = image;
+//     section.media = type === 'youtube' ? youtubeLink : (media || section.media);
+
+//     await section.save();
+//     await section.populate('pageId', 'title');
+//     res.status(200).json(section);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error updating section', error });
+//   }
+// };
+
 export const updateMediaSection = async (req, res) => {
   try {
     const { title, pageId, type, youtubeLink } = req.body;
     const section = await MediaSection.findById(req.params.id);
-    if (!section) return res.status(404).json({ message: 'Section not found' });
+    if (!section) return res.status(404).json({ message: "Section not found" });
 
-    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : section.image;
-    const media = req.files ? await uploadFile2(req.files['media'][0],"media") : section.media;
+    // Upload new files (if any)
+    const image = req.files?.image ? await uploadFile2(req.files["image"][0], "media") : null;
+    const media = req.files?.media ? await uploadFile2(req.files["media"][0], "media") : null;
 
+    // Delete old files if replaced
     if (image && section.image) deleteFile(section.image);
-    if (media && section.media && section.type !== 'youtube') deleteFile(section.media);
+    if (media && section.media && section.type !== "youtube") deleteFile(section.media);
 
-    section.title = title || section.title;
-    section.pageId = pageId || section.pageId;
-    section.type = type || section.type;
+    // Update fields
+    if (title) section.title = title;
+    if (pageId) section.pageId = pageId;
+    if (type) section.type = type;
+
     if (image) section.image = image;
-    section.media = type === 'youtube' ? youtubeLink : (media || section.media);
+
+    if (type === "youtube") {
+      section.youtubeLink = youtubeLink;
+      // Clear old video if existed
+      if (section.media && section.type !== "youtube") {
+        deleteFile(section.media);
+      }
+      section.media = null;
+    } else if (type === "video") {
+      if (media) section.media = media;
+      section.youtubeLink = null; // clear old youtube link
+    }
 
     await section.save();
-    await section.populate('pageId', 'title');
+    await section.populate("pageId", "title");
+
     res.status(200).json(section);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating section', error });
+    res.status(500).json({ message: "Error updating section", error });
   }
 };
+
 
 // DELETE
 export const deleteMediaSection = async (req, res) => {
