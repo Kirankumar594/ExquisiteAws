@@ -10,6 +10,8 @@ router.post('/register', async (req, res) => {
   res.status(201).json(admin);
 });
 
-router.post('/login', loginAdmin);
+router.post('/login', loginAdmin); 
 
+
+// check
 export default router;
