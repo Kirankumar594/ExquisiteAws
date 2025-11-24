@@ -1,82 +1,86 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 dotenv.config();
 
-// Initialize S3 client
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+// ES module equivalent for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
- * Get the correct S3 URL format based on region
- * @param {String} bucketName - S3 bucket name
- * @param {String} key - S3 object key
- * @returns {String} - Correctly formatted S3 URL
+ * Get the base URL based on environment (localhost for local, domain for production)
+ * @returns {String} - Base URL for file access
  */
-const getS3Url = (bucketName, key) => {
-  const region = process.env.AWS_REGION;
+const getBaseUrl = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
   
-  // Format differs by region
-  if (region === 'us-east-1') {
-    return `https://${bucketName}.s3.amazonaws.com/${key}`;
+  if (isProduction && process.env.DOMAIN_NAME) {
+    // Use domain name in production
+    return process.env.DOMAIN_NAME.startsWith('http') 
+      ? process.env.DOMAIN_NAME 
+      : `https://${process.env.DOMAIN_NAME}`;
   } else {
-    return `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
+    // Use localhost in development
+    const port = process.env.PORT || 5000;
+    return `http://localhost:${port}`;
   }
 };
 
 /**
- * Upload a file from a multipart form (formidable)
- * @param {Object} file - File object from formidable
- * @param {String} bucketname - Folder name within the bucket
- * @returns {Promise<String>} - URL of the uploaded file
+ * Extract file path from URL
+ * @param {String} url - Full file URL
+ * @returns {String} - Local file path
  */
-export const uploadFile = async (file, bucketname) => {
+const getFilePathFromUrl = (url) => {
   try {
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: `${bucketname}/${Date.now()}_${file.originalFilename}`,
-      Body: fs.createReadStream(file.filepath),
-      ContentType: file.mimetype,
-    };
+    // Extract the path after the domain/port
+    const urlObj = new URL(url);
+    const relativePath = urlObj.pathname;
     
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-    
-    const location = getS3Url(process.env.AWS_S3_BUCKET_NAME, params.Key);
-    console.log(`File uploaded: ${location}`);
-    return location;
+    // Remove leading slash and get the file path
+    const filePath = path.join(__dirname, '..', relativePath.startsWith('/') ? relativePath.slice(1) : relativePath);
+    return filePath;
   } catch (error) {
-    console.error("Error uploading file:", error);
-    throw new Error(`File upload failed: ${error.message}`);
+    throw new Error(`Invalid file URL: ${url}`);
   }
 };
 
 /**
- * Upload a file from express-multer middleware
+ * Upload a file from express-multer middleware to local upload directory
  * @param {Object} file - File object from multer
- * @param {String} bucketname - Folder name within the bucket
+ * @param {String} bucketname - Folder name within the uploads directory (optional)
  * @returns {Promise<String>} - URL of the uploaded file
  */
 export const uploadFile2 = async (file, bucketname) => {
   try {
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: `${bucketname}/${Date.now()}_${file.originalname}`,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-    };
+    // Handle case where bucketname is not provided or is empty
+    const folderName = bucketname && bucketname.trim() !== '' ? bucketname.trim() : 'default';
     
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
+    // Create upload directory path
+    const uploadDir = path.join(__dirname, '..', 'uploads', folderName);
     
-    const location = getS3Url(process.env.AWS_S3_BUCKET_NAME, params.Key);
-    console.log(`File uploaded: ${location}`);
-    return location;
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    
+    // Generate unique filename
+    const timestamp = Date.now();
+    const fileName = `${timestamp}_${file.originalname}`;
+    const filePath = path.join(uploadDir, fileName);
+    
+    // Write file to local directory
+    fs.writeFileSync(filePath, file.buffer);
+    
+    // Generate URL
+    const baseUrl = getBaseUrl();
+    const relativePath = `uploads/${folderName}/${fileName}`;
+    const fileUrl = `${baseUrl}/${relativePath}`;
+    
+    console.log(`File uploaded locally: ${fileUrl}`);
+    return fileUrl;
   } catch (error) {
     console.error("Error uploading file:", error);
     throw new Error(`File upload failed: ${error.message}`);
@@ -84,40 +88,23 @@ export const uploadFile2 = async (file, bucketname) => {
 };
 
 /**
- * Extract the S3 key from a full S3 URL
- * @param {String} url - Full S3 URL
- * @returns {String} - S3 key
- */
-const getUrlFileKey = (url) => {
-  // Updated regex to handle various S3 URL formats
-  const regex = /^https?:\/\/([^\.]+)\.s3\.(?:[^\.]+\.)?amazonaws\.com\/(.+)$/;
-  const match = url.match(regex);
-  if (match) {
-    return match[2]; // file key is in group 2
-  } else {
-    throw new Error(`Invalid S3 URL: ${url}`);
-  }
-};
-
-/**
- * Delete a file from S3
- * @param {String} url - Full S3 URL of the file to delete
+ * Delete a file from local upload directory
+ * @param {String} url - Full URL of the file to delete
  * @returns {Promise<Object>} - Result of the delete operation
  */
 export const deleteFile = async (url) => {
   try {
-    const fileKey = getUrlFileKey(url);
-    console.log(`Deleting file with key: ${fileKey}`);
+    const filePath = getFilePathFromUrl(url);
     
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: fileKey,
-    };
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
     
-    const command = new DeleteObjectCommand(params);
-    const data = await s3Client.send(command);
-    console.log(`File deleted successfully: ${fileKey}`);
-    return data;
+    // Delete the file
+    fs.unlinkSync(filePath);
+    console.log(`File deleted successfully: ${filePath}`);
+    return { success: true, message: 'File deleted successfully' };
   } catch (error) {
     console.error("Error deleting file:", error);
     throw new Error(`Error deleting file: ${error.message}`);
@@ -125,31 +112,32 @@ export const deleteFile = async (url) => {
 };
 
 /**
- * Update a file in S3 (delete and upload new version)
- * @param {String} url - Full S3 URL of the file to update
+ * Update a file in local upload directory (delete and upload new version)
+ * @param {String} url - Full URL of the file to update
  * @param {Object} newFile - New file object to upload
  * @returns {Promise<String>} - URL of the updated file
  */
 export const updateFile = async (url, newFile) => {
   try {
-    const fileKey = getUrlFileKey(url);
-    // Delete the old file first
-    await deleteFile(url);
+    const oldFilePath = getFilePathFromUrl(url);
     
-    // Upload the new file with the same key
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: fileKey,
-      Body: newFile.buffer,
-      ContentType: newFile.mimetype,
-    };
+    // Extract folder name from the old file path
+    const uploadsIndex = oldFilePath.indexOf('uploads');
+    if (uploadsIndex === -1) {
+      throw new Error('Invalid file path: must be in uploads directory');
+    }
     
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
+    const relativePath = oldFilePath.substring(uploadsIndex);
+    const pathParts = relativePath.split(path.sep);
+    const folderName = pathParts[1]; // uploads/folderName/filename
     
-    const location = getS3Url(process.env.AWS_S3_BUCKET_NAME, fileKey);
-    console.log(`File updated: ${location}`);
-    return location;
+    // Delete the old file if it exists
+    if (fs.existsSync(oldFilePath)) {
+      fs.unlinkSync(oldFilePath);
+    }
+    
+    // Upload the new file with the same folder structure
+    return await uploadFile2(newFile, folderName);
   } catch (error) {
     console.error("Error updating file:", error);
     throw new Error(`Error updating file: ${error.message}`);
@@ -157,27 +145,15 @@ export const updateFile = async (url, newFile) => {
 };
 
 /**
- * Upload multiple files to S3
+ * Upload multiple files to local upload directory
  * @param {Array<Object>} files - Array of file objects from multer
- * @param {String} bucketname - Folder name within the bucket
+ * @param {String} bucketname - Folder name within the uploads directory (optional)
  * @returns {Promise<Array<String>>} - Array of URLs of the uploaded files
  */
 export const multifileUpload = async (files, bucketname) => {
   try {
     const uploadPromises = files.map(async (file) => {
-      const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `${bucketname}/${Date.now()}_${file.originalname}`,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      };
-      
-      const command = new PutObjectCommand(params);
-      await s3Client.send(command);
-      
-      const location = getS3Url(process.env.AWS_S3_BUCKET_NAME, params.Key);
-      console.log(`File uploaded: ${location}`);
-      return location;
+      return await uploadFile2(file, bucketname);
     });
     
     return Promise.all(uploadPromises);
@@ -188,7 +164,6 @@ export const multifileUpload = async (files, bucketname) => {
 };
 
 export default { 
-  uploadFile, 
   uploadFile2, 
   deleteFile, 
   updateFile, 
