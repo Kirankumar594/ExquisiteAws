@@ -1,3 +1,4 @@
+
 import express from 'express';
 import {
   createMusicSection,
@@ -8,8 +9,10 @@ import {
   deleteMusicSection
 } from '../controllers/musicSectionController.js';
 
+// import { upload } from '../middleware/music.js'; // Assuming you already have multer setup
 import multer from 'multer';
 const upload=multer();
+
 const router = express.Router();
 
 const uploadFields = upload.fields([

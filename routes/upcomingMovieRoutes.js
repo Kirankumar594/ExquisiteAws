@@ -1,3 +1,4 @@
+
 import express from 'express';
 import {
   createUpcomingMovie,
@@ -6,20 +7,14 @@ import {
   updateUpcomingMovie,
   deleteUpcomingMovie,
 } from '../controllers/upcomingMovieControllers.js';
-import multer from 'multer';
+import { uploadUpcomingMovie } from '../middleware/upcomingVideoUpload.js';
 
 const router = express.Router();
-const uploadUpcomingMovie=multer()
-router.post('/', uploadUpcomingMovie.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'video', maxCount: 1 },
-]), createUpcomingMovie);
+
+router.post('/', uploadUpcomingMovie, createUpcomingMovie);
 router.get('/', getAllUpcomingMovies);
 router.get('/:id', getUpcomingMovieById);
-router.put('/:id', uploadUpcomingMovie.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'video', maxCount: 1 },
-]), updateUpcomingMovie);
+router.put('/:id', uploadUpcomingMovie, updateUpcomingMovie);
 router.delete('/:id', deleteUpcomingMovie);
 
 export default router;

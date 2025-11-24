@@ -8,6 +8,8 @@ import {
   deleteBanner
 } from '../controllers/bannerController.js';
 
+
+
 const router = express.Router();
 const upload =multer()
 // Routes

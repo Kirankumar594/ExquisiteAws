@@ -1,3 +1,4 @@
+
 import express from 'express';
 import {
   createReleasedMovie,
@@ -6,21 +7,14 @@ import {
   updateReleasedMovie,
   deleteReleasedMovie,
 } from '../controllers/releasedMovieControllers.js';
-import multer from 'multer';
-// import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
-const uploadReleasedMovie=multer();
+import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
+
 const router = express.Router();
 
-router.post('/', uploadReleasedMovie.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 },
-  ]), createReleasedMovie);
+router.post('/', uploadReleasedMovie, createReleasedMovie);
 router.get('/', getAllReleasedMovies);
 router.get('/:id', getReleasedMovieById);
-router.put('/:id', uploadReleasedMovie.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'video', maxCount: 1 },
-  ]), updateReleasedMovie);
+router.put('/:id', uploadReleasedMovie, updateReleasedMovie);
 router.delete('/:id', deleteReleasedMovie);
 
 export default router;
