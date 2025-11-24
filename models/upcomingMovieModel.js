@@ -10,7 +10,7 @@ const upcomingMovieSchema = new mongoose.Schema(
     type: { type: String, enum: ['file', 'youtube'], required: true },
     description: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, suppressReservedKeysWarning: true }
 );
 
 export default mongoose.model('UpcomingMovie', upcomingMovieSchema);

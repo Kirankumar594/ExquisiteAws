@@ -9,7 +9,7 @@ const releasedMovieSchema = new mongoose.Schema(
 
     
   },
-  { timestamps: true }
+  { timestamps: true, suppressReservedKeysWarning: true }
 );
 
 export default mongoose.model('ReleasedMovie', releasedMovieSchema);

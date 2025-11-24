@@ -11,7 +11,7 @@ const passMovieSchema = new mongoose.Schema(
     type: { type: String, enum: ['file', 'youtube'], required: true }, // New field to track type
     description: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, suppressReservedKeysWarning: true }
 );
 
 export default mongoose.model('PassMovie', passMovieSchema);
