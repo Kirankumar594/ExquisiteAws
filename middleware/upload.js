@@ -1,6 +1,6 @@
-// import multer from 'multer';
-// import path from 'path';
-// import fs from 'fs';
+// const multer = require('multer');
+// const path = require('path');
+// const fs = require('fs');
 
 // // Create uploads directory if it doesn't exist
 // const uploadsDir = 'uploads/';
@@ -41,11 +41,11 @@
 //     }
 // });
 
-// export default upload;
+// module.exports = upload;
 
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const uploadsDir = 'uploads/';
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -67,8 +67,9 @@ const fileFilter = (req, file, cb) => {
   else cb(new Error("Only image/video allowed"));
 };
 
-export default multer({
-  
+module.exports = multer({
+  storage,
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 },
 });
+

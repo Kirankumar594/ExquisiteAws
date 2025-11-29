@@ -1,7 +1,7 @@
 // routes/consultationRoutes.js
-import express from 'express'
+const express = require('express');
 const router = express.Router();
-import {Consultation} from '../models/Consultation.js';
+const { Consultation } = require('../models/Consultation');
 
 // POST - Save new consultation
 router.post('/', async (req, res) => {
@@ -46,4 +46,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
+

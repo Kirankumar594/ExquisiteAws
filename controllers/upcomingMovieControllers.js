@@ -1,13 +1,13 @@
 
-import UpcomingMovie from '../models/upcomingMovieModel.js';
-import fs from 'fs';
+const UpcomingMovie = require('../models/upcomingMovieModel');
+const fs = require('fs');
 
-import { uploadFile2 } from '../middleware/aws.js';
+const { uploadFile2  } = require('../middleware/aws');
 
 // CREATE
 
 
-export const createUpcomingMovie = async (req, res) => {
+const createUpcomingMovie = async (req, res) => {
   try {
     const { title, description, isNew, type, youtubeLink } = req.body;
 
@@ -15,12 +15,12 @@ export const createUpcomingMovie = async (req, res) => {
     let videoFile = null;
 
     // Upload image if provided
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       imageFile = await uploadFile2(req.files.image[0], "media");
     }
 
     // Upload video if provided
-    if (req.files?.video?.[0]) {
+    if (req.files && req.files.video && req.files.video[0]) {
       videoFile = await uploadFile2(req.files.video[0], "media");
     }
 
@@ -43,7 +43,7 @@ export const createUpcomingMovie = async (req, res) => {
     const newMovie = new UpcomingMovie({
       title,
       description,
-      isNew: isNew === "true" || isNew === true,
+      isNewFlag: isNew === "true" || isNew === true,
       image: imageFile, // ✅ S3 URL
       video: videoSource, // ✅ S3 URL or YouTube link
       type,
@@ -58,28 +58,28 @@ export const createUpcomingMovie = async (req, res) => {
 
 
 // UPDATE
-export const updateUpcomingMovie = async (req, res) => {
+const updateUpcomingMovie = async (req, res) => {
   try {
     const movie = await UpcomingMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
     const { title, description, isNew, type, youtubeLink } = req.body;
 
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);
       movie.image = await uploadFile2(req.files['image'][0],"media");
     }
 
-    if (type === 'file' && req.files?.video?.[0]) {
+    if (type === 'file' && req.files && req.files.video && req.files.video[0]) {
       if (fs.existsSync(movie.video)) fs.unlinkSync(movie.video);
       movie.video = await uploadFile2(req.files['video'][0],"media");
     }
 
-    movie.title = title ?? movie.title;
-    movie.description = description ?? movie.description;
-    movie.isNew = isNew === 'true' || isNew === true;
+    movie.title = title || movie.title;
+    movie.description = description || movie.description;
+    movie.isNewFlag = isNew === 'true' || isNew === true;
     movie.type = type;
-    movie.video = type === 'youtube' ? youtubeLink : (req.files?.video?.[0]?.path ?? movie.video);
+    movie.video = type === 'youtube' ? youtubeLink : ((req.files && req.files.video && req.files.video[0] && req.files.video[0].path) || movie.video);
 
     const updated = await movie.save();
     res.json(updated);
@@ -89,7 +89,7 @@ export const updateUpcomingMovie = async (req, res) => {
 };
 
 // DELETE
-export const deleteUpcomingMovie = async (req, res) => {
+const deleteUpcomingMovie = async (req, res) => {
   try {
     const movie = await UpcomingMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
@@ -105,17 +105,18 @@ export const deleteUpcomingMovie = async (req, res) => {
 };
 
 // GET ALL
-export const getAllUpcomingMovies = async (req, res) => {
+const getAllUpcomingMovies = async (req, res) => {
   try {
     const movies = await UpcomingMovie.find().sort({ createdAt: -1 });
-    res.json(movies);
+
+   return res.json(movies);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
 // GET BY ID
-export const getUpcomingMovieById = async (req, res) => {
+const getUpcomingMovieById = async (req, res) => {
   try {
     const movie = await UpcomingMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
@@ -124,3 +125,9 @@ export const getUpcomingMovieById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+module.exports = { createUpcomingMovie, updateUpcomingMovie, deleteUpcomingMovie, getAllUpcomingMovies, getUpcomingMovieById };
+
+
+
+

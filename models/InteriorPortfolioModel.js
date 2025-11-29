@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const InteriorPortfolioSchema = new mongoose.Schema({
   category: {
@@ -22,4 +22,5 @@ const InteriorPortfolioSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const InteriorPortfolio = mongoose.model('InteriorPortfolio', InteriorPortfolioSchema);
-export default InteriorPortfolio;
+module.exports = InteriorPortfolio;
+

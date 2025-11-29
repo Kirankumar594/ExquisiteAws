@@ -1,7 +1,7 @@
-import PageName from '../models/PageName.js';
+const PageName = require('../models/PageName');
 
 // CREATE
-export const createPageName = async (req, res) => {
+const createPageName = async (req, res) => {
   try {
     const { title } = req.body;
     const newPage = new PageName({ title });
@@ -13,7 +13,7 @@ export const createPageName = async (req, res) => {
 };
 
 // GET ALL
-export const getAllPageNames = async (req, res) => {
+const getAllPageNames = async (req, res) => {
   try {
     const pages = await PageName.find().sort({ createdAt: -1 });
     res.status(200).json(pages);
@@ -23,7 +23,7 @@ export const getAllPageNames = async (req, res) => {
 };
 
 // GET BY ID
-export const getPageNameById = async (req, res) => {
+const getPageNameById = async (req, res) => {
   try {
     const page = await PageName.findById(req.params.id);
     if (!page) {
@@ -36,7 +36,7 @@ export const getPageNameById = async (req, res) => {
 };
 
 // UPDATE
-export const updatePageName = async (req, res) => {
+const updatePageName = async (req, res) => {
   try {
     const { title } = req.body;
     const updatedPage = await PageName.findByIdAndUpdate(
@@ -54,7 +54,7 @@ export const updatePageName = async (req, res) => {
 };
 
 // DELETE
-export const deletePageName = async (req, res) => {
+const deletePageName = async (req, res) => {
   try {
     const deleted = await PageName.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -65,3 +65,9 @@ export const deletePageName = async (req, res) => {
     res.status(500).json({ message: 'Error deleting page name', error });
   }
 };
+
+module.exports = { createPageName, getAllPageNames, getPageNameById, updatePageName, deletePageName };
+
+
+
+

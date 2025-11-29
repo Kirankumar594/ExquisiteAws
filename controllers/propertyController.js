@@ -1,8 +1,8 @@
-import { uploadFile2 } from '../middleware/aws.js';
-import Property from '../models/PropertyModel.js';
+const { uploadFile2  } = require('../middleware/aws');
+const Property = require('../models/PropertyModel');
 
 // Create new property
-export const createProperty = async (req, res) => {
+const createProperty = async (req, res) => {
   try {
     const { title } = req.body;
     const image = req.file? await uploadFile2(req.file,"property"):""
@@ -20,7 +20,7 @@ export const createProperty = async (req, res) => {
 };
 
 // Get all properties
-export const getProperties = async (req, res) => {
+const getProperties = async (req, res) => {
   try {
     const properties = await Property.find().sort({ createdAt: -1 });
     res.status(200).json(properties);
@@ -30,7 +30,7 @@ export const getProperties = async (req, res) => {
 };
 
 // Get single property
-export const getPropertyById = async (req, res) => {
+const getPropertyById = async (req, res) => {
   try {
     const property = await Property.findById(req.params.id);
     if (!property) return res.status(404).json({ message: 'Property not found' });
@@ -41,7 +41,7 @@ export const getPropertyById = async (req, res) => {
 };
 
 // Update property
-export const updateProperty = async (req, res) => {
+const updateProperty = async (req, res) => {
   try {
     const { title } = req.body;
     const property = await Property.findById(req.params.id);
@@ -63,7 +63,7 @@ export const updateProperty = async (req, res) => {
 };
 
 // Delete property
-export const deleteProperty = async (req, res) => {
+const deleteProperty = async (req, res) => {
   try {
     const property = await Property.findByIdAndDelete(req.params.id);
     
@@ -79,3 +79,9 @@ export const deleteProperty = async (req, res) => {
     });
   }
 };
+
+module.exports = { createProperty, getProperties, getPropertyById, updateProperty, deleteProperty };
+
+
+
+

@@ -1,11 +1,7 @@
-import CommunityAbout from "../models/CommunityAboutModel.js"
-import fs from "fs"
-import path from "path"
-import { fileURLToPath } from "url"
-import { uploadFile2 } from "../middleware/aws.js"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const CommunityAbout = require('../models/CommunityAboutModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Helper to clean up uploaded files
 const cleanupUploadedFiles = (files) => {
@@ -30,7 +26,7 @@ const cleanupUploadedFiles = (files) => {
   }
 }
 
-export const createCommunityAbout = async (req, res) => {
+const createCommunityAbout = async (req, res) => {
   console.log("--- createCommunityAbout START ---")
   console.log("Request Body:", req.body)
   console.log("Request Files:", req.files)
@@ -87,7 +83,7 @@ export const createCommunityAbout = async (req, res) => {
   }
 }
 
-export const getCommunityAbout = async (req, res) => {
+const getCommunityAbout = async (req, res) => {
   try {
     const data = await CommunityAbout.find().sort({ createdAt: -1 })
     res.status(200).json({
@@ -106,7 +102,7 @@ export const getCommunityAbout = async (req, res) => {
   }
 }
 
-export const updateCommunityAbout = async (req, res) => {
+const updateCommunityAbout = async (req, res) => {
   console.log("--- updateCommunityAbout START ---")
   console.log("Request Params ID:", req.params.id)
   console.log("Request Body (raw):", req.body)
@@ -197,7 +193,7 @@ export const updateCommunityAbout = async (req, res) => {
   }
 }
 
-export const deleteCommunityAbout = async (req, res) => {
+const deleteCommunityAbout = async (req, res) => {
   console.log("--- deleteCommunityAbout START ---")
   console.log("Request Params ID:", req.params.id)
   try {
@@ -249,3 +245,9 @@ export const deleteCommunityAbout = async (req, res) => {
     console.log("--- deleteCommunityAbout END ---")
   }
 }
+
+module.exports = { createCommunityAbout, getCommunityAbout, updateCommunityAbout, deleteCommunityAbout };
+
+
+
+

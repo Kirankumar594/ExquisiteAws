@@ -1,12 +1,11 @@
-// import express from 'express';
-// import upload from '../middleware/upload.js';
-// import {
-//   createProduction,
+// const express = require('express');
+// const upload = require('../middleware/upload');
+// const { //   createProduction,
 //   getAllProductions,
 //   getProductionById,
 //   updateProduction,
 //   deleteProduction,
-// } from '../controllers/productionController.js';
+//  } = require('../controllers/productionController');
 
 // const router = express.Router();
 
@@ -16,16 +15,15 @@
 // router.put('/:id', upload.array('images', 10), updateProduction);
 // router.delete('/:id', deleteProduction);
 
-// export default router;
-import express from 'express';
-import multer from 'multer';
-import {
-  createProduction,
+// module.exports = router;
+const express = require('express');
+const multer = require('multer');
+const { createProduction,
   getAllProductions,
   getProductionById,
   updateProduction,
   deleteProduction,
-} from '../controllers/productionController.js';
+ } = require('../controllers/productionController');
 
 const upload = multer(); // memory storage (good for S3)
 const router = express.Router();
@@ -36,4 +34,5 @@ router.get('/:id', getProductionById);
 router.put('/:id', upload.array('image', 10), updateProduction);
 router.delete('/:id', deleteProduction);
 
-export default router;
+module.exports = router;
+

@@ -1,11 +1,10 @@
-import express from 'express';
-import {
-  createPageName,
+const express = require('express');
+const { createPageName,
   getAllPageNames,
   getPageNameById,
   updatePageName,
   deletePageName
-} from '../controllers/pageNameController.js';
+ } = require('../controllers/pageNameController');
 
 const router = express.Router();
 
@@ -24,4 +23,5 @@ router.put('/:id', updatePageName);
 // DELETE - Delete
 router.delete('/:id', deletePageName);
 
-export default router;
+module.exports = router;
+

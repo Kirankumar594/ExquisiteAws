@@ -1,5 +1,5 @@
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const musicSectionSchema = new mongoose.Schema(
   {
@@ -16,4 +16,5 @@ const musicSectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('MusicSection', musicSectionSchema);
+module.exports = mongoose.model('MusicSection', musicSectionSchema);
+

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const topProjectSchema = new mongoose.Schema({
   image: {
@@ -30,4 +30,5 @@ const topProjectSchema = new mongoose.Schema({
 
 const TopProject = mongoose.model('TopProject', topProjectSchema);
 
-export default TopProject;
+module.exports = TopProject;
+

@@ -1,10 +1,10 @@
-import ClientModel from "../models/ClientModel.js"
-import  {uploadSingle}  from "../middleware/uplodes.js" 
-import fs from "fs"
-import path from "path"
-import { uploadFile2 } from "../middleware/aws.js"
+const ClientModel = require('../models/ClientModel');
+const { uploadSingle } = require('../middleware/uplodes'); 
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
-export const createClient = async (req, res) => {
+const createClient = async (req, res) => {
   // Use multer middleware
   uploadSingle(req, res, async (err) => {
     if (err) {
@@ -39,7 +39,7 @@ export const createClient = async (req, res) => {
   })
 }
 
-export const getClients = async (req, res) => {
+const getClients = async (req, res) => {
   try {
     const clients = await ClientModel.find().sort({ createdAt: -1 })
     res.status(200).json(clients)
@@ -48,7 +48,7 @@ export const getClients = async (req, res) => {
   }
 }
 
-export const updateClient = async (req, res) => {
+const updateClient = async (req, res) => {
   uploadSingle(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ message: err.message })
@@ -96,7 +96,7 @@ export const updateClient = async (req, res) => {
   })
 }
 
-export const deleteClient = async (req, res) => {
+const deleteClient = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -121,3 +121,9 @@ export const deleteClient = async (req, res) => {
     res.status(500).json({ message: "Server error" })
   }
 }
+
+module.exports = { createClient, getClients, updateClient, deleteClient };
+
+
+
+

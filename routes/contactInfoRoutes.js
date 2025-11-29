@@ -1,11 +1,10 @@
-import express from 'express';
-import {
-  createContactInfo,
+const express = require('express');
+const { createContactInfo,
   getAllContactInfo,
   getContactInfoById,
   updateContactInfo,
   deleteContactInfo,
-} from '../controllers/contactInfoController.js';
+ } = require('../controllers/contactInfoController');
 
 const router = express.Router();
 
@@ -15,4 +14,5 @@ router.get('/:id', getContactInfoById);
 router.put('/:id', updateContactInfo);
 router.delete('/:id', deleteContactInfo);
 
-export default router;
+module.exports = router;
+

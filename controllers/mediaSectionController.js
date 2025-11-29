@@ -1,7 +1,7 @@
-import MediaSection from '../models/MediaSection.js';
-import fs from 'fs';
-import path from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
+const MediaSection = require('../models/MediaSection');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 const deleteFile = (filename) => {
   if (!filename) return;
@@ -10,7 +10,7 @@ const deleteFile = (filename) => {
 };
 
 // CREATE
-export const createMediaSection = async (req, res) => {
+const createMediaSection = async (req, res) => {
   try {
     const { title, pageId, type, youtubeLink } = req.body;
    const image = req.files && req.files['image'] 
@@ -39,7 +39,7 @@ const media = req.files && req.files['media']
 };
 
 // GET all
-export const getAllMediaSections = async (_req, res) => {
+const getAllMediaSections = async (_req, res) => {
   try {
     const sections = await MediaSection.find().populate('pageId', 'title');
     res.status(200).json(sections);
@@ -49,7 +49,7 @@ export const getAllMediaSections = async (_req, res) => {
 };
 
 // GET by ID
-export const getMediaSectionById = async (req, res) => {
+const getMediaSectionById = async (req, res) => {
   try {
     const section = await MediaSection.findById(req.params.id).populate('pageId', 'title');
     if (!section) return res.status(404).json({ message: 'Section not found' });
@@ -60,7 +60,7 @@ export const getMediaSectionById = async (req, res) => {
 };
 
 // GET by pageId
-export const getMediaSectionsByPageId = async (req, res) => {
+const getMediaSectionsByPageId = async (req, res) => {
   try {
     const { pageId } = req.params;
     const sections = await MediaSection.find({ pageId }).populate('pageId', 'title');
@@ -71,7 +71,7 @@ export const getMediaSectionsByPageId = async (req, res) => {
 };
 
 // UPDATE
-// export const updateMediaSection = async (req, res) => {
+// const updateMediaSection = async (req, res) => {
 //   try {
 //     const { title, pageId, type, youtubeLink } = req.body;
 //     const section = await MediaSection.findById(req.params.id);
@@ -97,15 +97,15 @@ export const getMediaSectionsByPageId = async (req, res) => {
 //   }
 // };
 
-export const updateMediaSection = async (req, res) => {
+const updateMediaSection = async (req, res) => {
   try {
     const { title, pageId, type, youtubeLink } = req.body;
     const section = await MediaSection.findById(req.params.id);
     if (!section) return res.status(404).json({ message: "Section not found" });
 
     // Upload new files (if any)
-    const image = req.files?.image ? await uploadFile2(req.files["image"][0], "media") : null;
-    const media = req.files?.media ? await uploadFile2(req.files["media"][0], "media") : null;
+    const image = req.files && req.files.image ? await uploadFile2(req.files["image"][0], "media") : null;
+    const media = req.files && files.media ? await uploadFile2(req.files["media"][0], "media") : null;
 
     // Delete old files if replaced
     if (image && section.image) deleteFile(section.image);
@@ -141,7 +141,7 @@ export const updateMediaSection = async (req, res) => {
 
 
 // DELETE
-export const deleteMediaSection = async (req, res) => {
+const deleteMediaSection = async (req, res) => {
   try {
     const section = await MediaSection.findByIdAndDelete(req.params.id);
     if (!section) return res.status(404).json({ message: 'Section not found' });
@@ -154,3 +154,9 @@ export const deleteMediaSection = async (req, res) => {
     res.status(500).json({ message: 'Error deleting section', error });
   }
 };
+
+module.exports = { createMediaSection, getAllMediaSections, getMediaSectionById, getMediaSectionsByPageId, updateMediaSection, updateMediaSection, deleteMediaSection };
+
+
+
+

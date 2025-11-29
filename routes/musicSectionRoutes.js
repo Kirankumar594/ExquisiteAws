@@ -1,16 +1,15 @@
 
-import express from 'express';
-import {
-  createMusicSection,
+const express = require('express');
+const { createMusicSection,
   getAllMusicSections,
   getMusicSectionById,
   getMusicSectionsByMusicId,
   updateMusicSection,
   deleteMusicSection
-} from '../controllers/musicSectionController.js';
+ } = require('../controllers/musicSectionController');
 
-// import { upload } from '../middleware/music.js'; // Assuming you already have multer setup
-import multer from 'multer';
+// const { upload  } = require('../middleware/music'); // Assuming you already have multer setup
+const multer = require('multer');
 const upload=multer();
 
 const router = express.Router();
@@ -27,4 +26,5 @@ router.get('/:id', getMusicSectionById);
 router.put('/:id', uploadFields, updateMusicSection);
 router.delete('/:id', deleteMusicSection);
 
-export default router;
+module.exports = router;
+

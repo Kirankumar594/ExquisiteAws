@@ -1,17 +1,45 @@
 
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const passMovieSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     image: { type: String, required: true },
-    isNew: { type: Boolean, default: false },
+    isNewFlag: { type: Boolean, default: false },
     video: { type: String, required: true }, // Either file path or YouTube link
     type: { type: String, enum: ['file', 'youtube'], required: true }, // New field to track type
     description: { type: String, required: true },
   },
-  { timestamps: true, suppressReservedKeysWarning: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (doc, ret) => {
+        if (ret.isNewFlag !== undefined) {
+          ret.isNew = ret.isNewFlag;
+          delete ret.isNewFlag;
+        }
+        return ret;
+      },
+    },
+    toObject: {
+      transform: (doc, ret) => {
+        if (ret.isNewFlag !== undefined) {
+          ret.isNew = ret.isNewFlag;
+          delete ret.isNewFlag;
+        }
+        return ret;
+      },
+    },
+  }
 );
 
-export default mongoose.model('PassMovie', passMovieSchema);
+passMovieSchema.pre('init', function (data) {
+  if (data && Object.prototype.hasOwnProperty.call(data, 'isNew') && data.isNewFlag === undefined) {
+    data.isNewFlag = data.isNew;
+    delete data.isNew;
+  }
+});
+
+module.exports = mongoose.model('PassMovie', passMovieSchema);
+

@@ -1,13 +1,12 @@
-import express from 'express';
-// import {upload} from '../middleware/upload.js';
-import {
-  createProperty,
+const express = require('express');
+// const { upload } = require('../middleware/upload');
+const { createProperty,
   getProperties,
   getPropertyById,
   updateProperty,
   deleteProperty
-} from '../controllers/propertyController.js';
-import multer from 'multer';
+ } = require('../controllers/propertyController');
+const multer = require('multer');
 
 const router = express.Router();
 const upload=multer();
@@ -18,4 +17,4 @@ router.get('/:id', getPropertyById);
 router.put('/:id', upload.single('image'), updateProperty);
 router.delete('/:id', deleteProperty);
 
-export default router;
+module.exports = router;

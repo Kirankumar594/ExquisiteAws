@@ -1,8 +1,8 @@
-import Admin from '../models/Admin.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+const Admin = require('../models/Admin');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-export const registerAdmin = async (req, res) => {
+const registerAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -30,7 +30,7 @@ export const registerAdmin = async (req, res) => {
   }
 };
 
-export const loginAdmin = async (req, res) => {
+const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -49,3 +49,9 @@ export const loginAdmin = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports = { registerAdmin, loginAdmin };
+
+
+
+

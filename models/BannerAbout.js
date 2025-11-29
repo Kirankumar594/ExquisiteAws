@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const bannerAboutSchema = new mongoose.Schema({
   image: {
@@ -24,4 +24,4 @@ const bannerAboutSchema = new mongoose.Schema({
 
 
 const BannerAbout = mongoose.model('BannerAbout', bannerAboutSchema);
-export default BannerAbout;
+module.exports = BannerAbout;

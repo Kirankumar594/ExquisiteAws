@@ -1,14 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import BannerAbout from '../models/BannerAbout.js';
-import { uploadFile2 } from '../middleware/aws.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require('fs');
+const path = require('path');
+const BannerAbout = require('../models/BannerAbout');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Create new banner
-export const createBanner = async (req, res) => {
+const createBanner = async (req, res) => {
   try {
     const { title, description } = req.body;
     const image = req.file ? await uploadFile2(req.file,"banner"):"";
@@ -43,7 +39,7 @@ export const createBanner = async (req, res) => {
 };
 
 // Get all banners
-export const getBanners = async (req, res) => {
+const getBanners = async (req, res) => {
   try {
     const banners = await BannerAbout.find().sort({ createdAt: -1 });
     res.status(200).json({
@@ -61,7 +57,7 @@ export const getBanners = async (req, res) => {
 };
 
 // Get single banner
-export const getBannerById = async (req, res) => {
+const getBannerById = async (req, res) => {
   try {
     const banner = await BannerAbout.findById(req.params.id);
     if (!banner) {
@@ -86,7 +82,7 @@ export const getBannerById = async (req, res) => {
 };
 
 // Update banner
-export const updateBanner = async (req, res) => {
+const updateBanner = async (req, res) => {
   try {
     const { title, description } = req.body;
     const banner = await BannerAbout.findById(req.params.id);
@@ -127,7 +123,7 @@ export const updateBanner = async (req, res) => {
 };
 
 // Delete banner
-export const deleteBanner = async (req, res) => {
+const deleteBanner = async (req, res) => {
   try {
     const banner = await BannerAbout.findByIdAndDelete(req.params.id);
     
@@ -161,3 +157,9 @@ export const deleteBanner = async (req, res) => {
     });
   }
 };
+
+module.exports = { createBanner, getBanners, getBannerById, updateBanner, deleteBanner };
+
+
+
+

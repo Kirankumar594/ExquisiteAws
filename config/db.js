@@ -1,14 +1,18 @@
-
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected");
+    const dbName = process.env.MONGO_DB_NAME || 'Cluster0';
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      dbName,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`MongoDB Connected (db: ${conn.connection.name})`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };
 
-export default connectDB
+module.exports = connectDB;

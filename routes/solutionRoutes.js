@@ -1,12 +1,11 @@
-import express from 'express';
-// import {upload} from '../middleware/upload.js';
-import {
-  createSolution,
+const express = require('express');
+// const { upload } = require('../middleware/upload');
+const { createSolution,
   getSolutions,
   deleteSolution,
   updateSolution
-} from '../controllers/solutionController.js';
-import multer from 'multer';
+ } = require('../controllers/solutionController');
+const multer = require('multer');
 
 const router = express.Router();
 const upload=multer();
@@ -15,4 +14,5 @@ router.get('/', getSolutions);
 router.delete('/:id', deleteSolution);
 router.put('/:id', upload.single('image'), updateSolution)
 
-export default router;
+module.exports = router;
+

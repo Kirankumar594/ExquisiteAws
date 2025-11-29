@@ -1,5 +1,5 @@
-import Admin from '../models/adminModel.js';
-import jwt from 'jsonwebtoken';  // Fixed JWT import
+const Admin = require('../models/adminModel');
+const jwt = require('jsonwebtoken');  // Fixed JWT import
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
@@ -34,4 +34,8 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-export default loginAdmin;
+module.exports = loginAdmin;
+
+
+
+

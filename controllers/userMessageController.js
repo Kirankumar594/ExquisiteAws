@@ -1,16 +1,16 @@
-import UserMessage from "../models/userMessageModel.js"
+const UserMessage = require('../models/userMessageModel');
 
 // CREATE
-export const createUserMessage = async (req, res) => {
+const createUserMessage = async (req, res) => {
   try {
     const { name, email, number, message } = req.body
 
     // Validate input
     const errors = []
-    if (!name?.trim()) errors.push("Name is required")
-    if (!email?.trim()) errors.push("Email is required")
-    if (!number?.trim()) errors.push("Contact number is required")
-    if (!message?.trim()) errors.push("Message is required")
+    if (!name && name.trim()) errors.push("Name is required")
+    if (!email && email.trim()) errors.push("Email is required")
+    if (!number && number.trim()) errors.push("Contact number is required")
+    if (!message && message.trim()) errors.push("Message is required")
 
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       errors.push("Please enter a valid email address")
@@ -58,7 +58,7 @@ export const createUserMessage = async (req, res) => {
 }
 
 // GET ALL MESSAGES
-export const getAllMessages = async (req, res) => {
+const getAllMessages = async (req, res) => {
   try {
     const messages = await UserMessage.find().sort({ createdAt: -1 })
     res.status(200).json({
@@ -73,3 +73,9 @@ export const getAllMessages = async (req, res) => {
     })
   }
 }
+
+module.exports = { createUserMessage, getAllMessages };
+
+
+
+

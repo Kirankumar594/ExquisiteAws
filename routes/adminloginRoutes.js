@@ -1,8 +1,8 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
 
-import  loginAdmin  from '../controllers/adminloginController.js';
-import Admin from '../models/adminModel.js'
+const loginAdmin = require('../controllers/adminloginController');
+const Admin = require('../models/adminModel');
 
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
@@ -14,4 +14,4 @@ router.post('/login', loginAdmin);
 
 
 // check
-export default router;
+module.exports = router;

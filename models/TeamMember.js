@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const teamMemberSchema = new mongoose.Schema({
   name: String,
@@ -8,4 +8,5 @@ const teamMemberSchema = new mongoose.Schema({
   image: String, // File path or URL
 }, { timestamps: true });
 
-export const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
+const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
+

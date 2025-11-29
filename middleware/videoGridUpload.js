@@ -1,6 +1,6 @@
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const folderPath = 'uploads/video-grid-home';
 if (!fs.existsSync(folderPath)) {
@@ -26,11 +26,14 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const uploadVideoGridHome = multer({
-  
+const uploadVideoGridHome = multer({
+  storage,
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
 }).fields([
   { name: 'image', maxCount: 1 },
   { name: 'video', maxCount: 1 },
 ]);
+
+
+module.exports = { uploadVideoGridHome };

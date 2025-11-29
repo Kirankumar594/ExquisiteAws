@@ -1,8 +1,8 @@
-import { uploadFile2 } from '../middleware/aws.js';
-import TopProject from '../models/TopProject.js';
+const { uploadFile2  } = require('../middleware/aws');
+const TopProject = require('../models/TopProject');
 
 // Create new TopProject
-export const createTopProject = async (req, res) => {
+const createTopProject = async (req, res) => {
   try {
     const { name, location } = req.body;
     const image = req.file ? await uploadFile2(req.file,"project"): null;
@@ -27,7 +27,7 @@ export const createTopProject = async (req, res) => {
 };
 
 // Get all TopProjects
-export const getTopProjects = async (req, res) => {
+const getTopProjects = async (req, res) => {
   try {
     const projects = await TopProject.find();
     res.json(projects);
@@ -37,7 +37,7 @@ export const getTopProjects = async (req, res) => {
 };
 
 // Get TopProject by ID
-export const getTopProjectById = async (req, res) => {
+const getTopProjectById = async (req, res) => {
   try {
     const project = await TopProject.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'TopProject not found' });
@@ -48,7 +48,7 @@ export const getTopProjectById = async (req, res) => {
 };
 
 // Update TopProject by ID
-export const updateTopProject = async (req, res) => {
+const updateTopProject = async (req, res) => {
   try {
     const { name, location } = req.body;
     const image = req.file ?  await uploadFile2(req.file,"project"):undefined
@@ -70,7 +70,7 @@ export const updateTopProject = async (req, res) => {
 };
 
 // Delete TopProject by ID
-export const deleteTopProject = async (req, res) => {
+const deleteTopProject = async (req, res) => {
   try {
     const deletedProject = await TopProject.findByIdAndDelete(req.params.id);
     if (!deletedProject) return res.status(404).json({ message: 'TopProject not found' });
@@ -79,3 +79,9 @@ export const deleteTopProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+module.exports = { createTopProject, getTopProjects, getTopProjectById, updateTopProject, deleteTopProject };
+
+
+
+

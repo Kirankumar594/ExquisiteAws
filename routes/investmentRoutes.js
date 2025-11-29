@@ -1,6 +1,6 @@
-import express from 'express'
+const express = require('express');
 const router = express.Router();
-import  {Investment}  from '../models/InvestmentPortfolio.js';
+const { Investment } = require('../models/InvestmentPortfolio');
 
 // GET all
 router.get('/', async (req, res) => {
@@ -8,6 +8,7 @@ router.get('/', async (req, res) => {
     const items = await Investment.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (err) {
+    console.error('Failed to fetch investments:', err);
     res.status(500).json({ message: 'Server Error' });
   }
 });
@@ -55,4 +56,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-export default router
+module.exports = router
+

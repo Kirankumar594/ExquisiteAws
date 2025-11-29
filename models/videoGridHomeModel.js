@@ -1,5 +1,5 @@
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const videoGridHomeSchema = new mongoose.Schema(
   {
@@ -12,4 +12,5 @@ const videoGridHomeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('VideoGridHome', videoGridHomeSchema);
+module.exports = mongoose.model('VideoGridHome', videoGridHomeSchema);
+

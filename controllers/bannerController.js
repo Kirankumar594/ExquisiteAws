@@ -1,15 +1,10 @@
-import Banner from '../models/BannerModel.js';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
-
-// Get the current module's directory path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const Banner = require('../models/BannerModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Create a new banner
-export const createBanner = async (req, res) => {
+const createBanner = async (req, res) => {
   try {
     const { title, description } = req.body;
     const image = req.file ? await uploadFile2(req.file,"banner"):"";
@@ -27,7 +22,7 @@ export const createBanner = async (req, res) => {
 };
 
 // Get all banners
-export const getBanners = async (req, res) => {
+const getBanners = async (req, res) => {
   try {
     const banners = await Banner.find().sort({ createdAt: -1 });
     res.status(200).json(banners);
@@ -37,7 +32,7 @@ export const getBanners = async (req, res) => {
 };
 
 // Get single banner
-export const getBannerById = async (req, res) => {
+const getBannerById = async (req, res) => {
   try {
     const banner = await Banner.findById(req.params.id);
     if (!banner) return res.status(404).json({ message: 'Banner not found' });
@@ -48,7 +43,7 @@ export const getBannerById = async (req, res) => {
 };
 
 // Update banner
-export const updateBanner = async (req, res) => {
+const updateBanner = async (req, res) => {
   try {
     const { title, description } = req.body;
     const banner = await Banner.findById(req.params.id);
@@ -75,7 +70,7 @@ export const updateBanner = async (req, res) => {
 
 // Then use it in your deleteBanner function
 // controllers/bannerController.js
-export const deleteBanner = async (req, res) => {
+const deleteBanner = async (req, res) => {
   try {
     const banner = await Banner.findByIdAndDelete(req.params.id);
     
@@ -92,3 +87,9 @@ export const deleteBanner = async (req, res) => {
     });
   }
 };
+
+module.exports = { createBanner, getBanners, getBannerById, updateBanner, deleteBanner };
+
+
+
+

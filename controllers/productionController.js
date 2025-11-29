@@ -1,10 +1,10 @@
-import ProductionSection from '../models/ProductionSection.js';
-import fs from 'fs';
-import path from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
+const ProductionSection = require('../models/ProductionSection');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // CREATE
-export const createProduction = async (req, res) => {
+const createProduction = async (req, res) => {
   try {
     const { title, subtitle, description } = req.body;
   const imageFiles = req.files || [];
@@ -28,7 +28,7 @@ export const createProduction = async (req, res) => {
 };
 
 // GET ALL
-export const getAllProductions = async (req, res) => {
+const getAllProductions = async (req, res) => {
   try {
     const data = await ProductionSection.find().sort({ createdAt: -1 });
     res.status(200).json(data);
@@ -38,7 +38,7 @@ export const getAllProductions = async (req, res) => {
 };
 
 // GET BY ID
-export const getProductionById = async (req, res) => {
+const getProductionById = async (req, res) => {
   try {
     const item = await ProductionSection.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
@@ -49,14 +49,14 @@ export const getProductionById = async (req, res) => {
 };
 
 // UPDATE
-export const updateProduction = async (req, res) => {
+const updateProduction = async (req, res) => {
   try {
     const { title, subtitle, description } = req.body;
     const item = await ProductionSection.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
 
     // Delete old images if new images uploaded
-    if (req.files && req.files.length > 0 && item.images?.length) {
+    if (req.files && req.files.length > 0 && item.images && images.length) {
       item.images.forEach(imgPath => {
         if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
       });
@@ -81,7 +81,7 @@ export const updateProduction = async (req, res) => {
 
 
 // DELETE
-export const deleteProduction = async (req, res) => {
+const deleteProduction = async (req, res) => {
   try {
     const item = await ProductionSection.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
@@ -95,3 +95,9 @@ export const deleteProduction = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete', error: err.message });
   }
 };
+
+module.exports = { createProduction, getAllProductions, getProductionById, updateProduction, deleteProduction };
+
+
+
+

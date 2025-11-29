@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const InteriorBannerSchema = new mongoose.Schema({
   image: {
@@ -17,4 +17,5 @@ const InteriorBannerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const InteriorBanner = mongoose.model('InteriorBanner', InteriorBannerSchema);
-export default InteriorBanner;
+module.exports = InteriorBanner;
+

@@ -1,9 +1,9 @@
-import express from 'express'
+const express = require('express');
 const router = express.Router();
-import {TeamMember} from '../models/TeamMember.js';
-import multer from 'multer';
-import { uploadFile2 } from '../middleware/aws.js';
-// import {upload} from '../middleware/upload.js';
+const { TeamMember } = require('../models/TeamMember');
+const multer = require('multer');
+const { uploadFile2  } = require('../middleware/aws');
+// const { upload } = require('../middleware/upload');
 
 const upload=multer();
 // POST - Create a team member (with image)
@@ -89,4 +89,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-export default router
+module.exports = router
+

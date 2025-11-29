@@ -1,7 +1,7 @@
-import VideoSection from '../models/VideoSection.js';
-import fs from 'fs';
-import path from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
+const VideoSection = require('../models/VideoSection');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 const deleteFile = (filename) => {
   const filePath = path.join('uploads/videos', filename);
@@ -9,14 +9,14 @@ const deleteFile = (filename) => {
 };
 
 // CREATE
-export const createVideoSection = async (req, res) => {
+const createVideoSection = async (req, res) => {
   try {
     const { title, pageId } = req.body;
- const image = req.files?.image?.[0]
+ const image = req.files && req.files.image && req.files.image[0]
   ? await uploadFile2(req.files.image[0], "releasemovies")
   : "";
 
-const video = req.files?.video?.[0]
+const video = req.files && req.files.video && req.files.video[0]
   ? await uploadFile2(req.files.video[0], "releasemovies")
   : "";
     if (!title || !pageId || !image || !video) {
@@ -32,7 +32,7 @@ const video = req.files?.video?.[0]
 };
 
 // GET ALL
-export const getAllVideoSections = async (req, res) => {
+const getAllVideoSections = async (req, res) => {
   try {
     const sections = await VideoSection.find().populate('pageId', 'title');
     res.status(200).json(sections);
@@ -42,7 +42,7 @@ export const getAllVideoSections = async (req, res) => {
 };
 
 // GET BY ID
-export const getVideoSectionById = async (req, res) => {
+const getVideoSectionById = async (req, res) => {
   try {
     const section = await VideoSection.findById(req.params.id).populate('pageId', 'title');
     if (!section) return res.status(404).json({ message: 'Not found' });
@@ -53,7 +53,7 @@ export const getVideoSectionById = async (req, res) => {
 };
 
 // GET BY PAGE ID
-export const getVideoSectionsByPage = async (req, res) => {
+const getVideoSectionsByPage = async (req, res) => {
   try {
     const { pageId } = req.params;
     const sections = await VideoSection.find({ pageId }).populate('pageId', 'title');
@@ -64,17 +64,17 @@ export const getVideoSectionsByPage = async (req, res) => {
 };
 
 // UPDATE
-export const updateVideoSection = async (req, res) => {
+const updateVideoSection = async (req, res) => {
   try {
     const { title, pageId } = req.body;
     const section = await VideoSection.findById(req.params.id);
     if (!section) return res.status(404).json({ message: 'Not found' });
 
- const image = req.files?.image?.[0]
+ const image = req.files && req.files.image && req.files.image[0]
   ? await uploadFile2(req.files.image[0], "releasemovies")
   : "";
 
-const video = req.files?.video?.[0]
+const video = req.files && req.files.video && req.files.video[0]
   ? await uploadFile2(req.files.video[0], "releasemovies")
   : "";
     // if (image && section.image) deleteFile(section.image);
@@ -93,7 +93,7 @@ const video = req.files?.video?.[0]
 };
 
 // DELETE
-export const deleteVideoSection = async (req, res) => {
+const deleteVideoSection = async (req, res) => {
   try {
     const section = await VideoSection.findByIdAndDelete(req.params.id);
     if (!section) return res.status(404).json({ message: 'Not found' });
@@ -106,3 +106,9 @@ export const deleteVideoSection = async (req, res) => {
     res.status(500).json({ message: 'Error deleting section', error });
   }
 };
+
+module.exports = { createVideoSection, getAllVideoSections, getVideoSectionById, getVideoSectionsByPage, updateVideoSection, deleteVideoSection };
+
+
+
+

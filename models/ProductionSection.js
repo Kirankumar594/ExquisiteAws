@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const productionSchema = new mongoose.Schema(
   {
@@ -10,4 +10,5 @@ const productionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('ProductionSection', productionSchema);
+module.exports = mongoose.model('ProductionSection', productionSchema);
+

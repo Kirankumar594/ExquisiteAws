@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const investmentPortfolioSchema = new mongoose.Schema({
   title: {
@@ -23,4 +23,5 @@ const investmentPortfolioSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export const  Investment= mongoose.model('InvestmentPortfolio', investmentPortfolioSchema);
+const Investment= mongoose.model('InvestmentPortfolio', investmentPortfolioSchema);
+

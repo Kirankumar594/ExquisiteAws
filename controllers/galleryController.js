@@ -1,5 +1,5 @@
-import Gallery from '../models/galleryModel.js';
-import { uploadFile2 } from '../middleware/aws.js';
+const Gallery = require('../models/galleryModel');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Helper function: validate file
 const validateFile = (file) => {
@@ -14,7 +14,7 @@ const validateFile = (file) => {
   }
 };
 
-export const createGallery = async (req, res) => {
+const createGallery = async (req, res) => {
   try {
     const { title, category, description } = req.body;
 
@@ -91,7 +91,7 @@ export const createGallery = async (req, res) => {
   }
 };
 
-export const getAllGallery = async (req, res) => {
+const getAllGallery = async (req, res) => {
   try {
     const galleryItems = await Gallery.find();
 
@@ -109,7 +109,7 @@ export const getAllGallery = async (req, res) => {
   }
 };
 
-export const updateGallery = async (req, res) => {
+const updateGallery = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, category, description } = req.body;
@@ -198,7 +198,7 @@ export const updateGallery = async (req, res) => {
   }
 };
 
-export const deleteGallery = async (req, res) => {
+const deleteGallery = async (req, res) => {
   try {
     const { id } = req.params;
     const itemToDelete = await Gallery.findById(id);
@@ -225,7 +225,7 @@ export const deleteGallery = async (req, res) => {
   }
 };
 
-export const getGalleryById = async (req, res) => {
+const getGalleryById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -269,3 +269,9 @@ export const getGalleryById = async (req, res) => {
     });
   }
 };
+
+module.exports = { createGallery, getAllGallery, updateGallery, deleteGallery, getGalleryById };
+
+
+
+

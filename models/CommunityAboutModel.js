@@ -1,5 +1,5 @@
 // models/CommunityAboutModel.js
-import mongoose from "mongoose"
+const mongoose = require('mongoose');
 
 const communityAboutSchema = new mongoose.Schema(
   {
@@ -21,4 +21,5 @@ const communityAboutSchema = new mongoose.Schema(
 )
 
 const CommunityAbout = mongoose.model("CommunityAbout", communityAboutSchema)
-export default CommunityAbout
+module.exports = CommunityAbout
+

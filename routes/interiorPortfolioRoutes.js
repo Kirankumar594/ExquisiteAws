@@ -1,12 +1,11 @@
-import express from 'express';
+const express = require('express');
 
-import {
-  createPortfolio,
+const { createPortfolio,
   getPortfolios,
   updatePortfolio,
   deletePortfolio
-} from '../controllers/interiorPortfolioController.js';
-import multer from 'multer';
+ } = require('../controllers/interiorPortfolioController');
+const multer = require('multer');
 const upload=multer();
 const router = express.Router();
 
@@ -15,4 +14,5 @@ router.get('/', getPortfolios);
 router.put('/:id', upload.single('image'), updatePortfolio);
 router.delete('/:id', deletePortfolio);
 
-export default router;
+module.exports = router;
+

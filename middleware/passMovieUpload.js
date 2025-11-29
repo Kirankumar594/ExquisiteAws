@@ -1,6 +1,6 @@
-// import multer from 'multer';
-// import fs from 'fs';
-// import path from 'path';
+// const multer = require('multer');
+// const fs = require('fs');
+// const path = require('path');
 
 // const folderPath = 'uploads/pass-movies';
 // if (!fs.existsSync(folderPath)) {
@@ -28,7 +28,7 @@
 //   }
 // };
 
-// export const uploadPassMovie = multer({
+// const uploadPassMovie = multer({
 //   storage,
 //   fileFilter,
 //   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
@@ -37,9 +37,9 @@
 //   { name: 'video', maxCount: 1 },
 // ]);
 
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const folderPath = 'uploads/pass-movies';
 if (!fs.existsSync(folderPath)) {
@@ -65,11 +65,14 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const uploadPassMovie = multer({
-
+const uploadPassMovie = multer({
+  storage,
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB max
 }).fields([
   { name: 'image', maxCount: 1 },
   { name: 'video', maxCount: 1 },
 ]);
+
+
+module.exports = { uploadPassMovie };

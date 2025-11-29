@@ -1,14 +1,13 @@
 
 
-import express from 'express';
-import {
-  createPassMovie,
+const express = require('express');
+const { createPassMovie,
   getAllPassMovies,
   getPassMovieById,
   updatePassMovie,
   deletePassMovie,
-} from '../controllers/passMovieControllers.js';
-import { uploadPassMovie } from '../middleware/passMovieUpload.js';
+ } = require('../controllers/passMovieControllers');
+const { uploadPassMovie  } = require('../middleware/passMovieUpload');
 
 const router = express.Router();
 
@@ -18,4 +17,5 @@ router.get('/:id', getPassMovieById);
 router.put('/:id', uploadPassMovie, updatePassMovie);
 router.delete('/:id', deletePassMovie);
 
-export default router;
+module.exports = router;
+

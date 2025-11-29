@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const mapEmbedSchema = new mongoose.Schema({
   embedUrl: {
@@ -7,4 +7,5 @@ const mapEmbedSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("MapEmbed", mapEmbedSchema);
+module.exports = mongoose.model("MapEmbed", mapEmbedSchema);
+

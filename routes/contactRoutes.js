@@ -1,7 +1,7 @@
-import express from 'express'
+const express = require('express');
 const router = express.Router();
 
-import {ContactMessage} from '../models/ContactMessage.js'
+const { ContactMessage } = require('../models/ContactMessage');
 
 // POST - Submit contact form
 router.post('/contact', async (req, res) => {
@@ -59,4 +59,5 @@ router.delete('/admin/messages/:id', async (req, res) => {
   }
 });
 
-export default router
+module.exports = router
+

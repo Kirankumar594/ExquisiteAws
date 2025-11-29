@@ -1,12 +1,11 @@
-import express from 'express';
-import multer from 'multer';
-import {
-  createBanner,
+const express = require('express');
+const multer = require('multer');
+const { createBanner,
   getBanners,
   getBannerById,
   updateBanner,
   deleteBanner
-} from '../controllers/bannerController.js';
+ } = require('../controllers/bannerController');
 
 
 
@@ -19,4 +18,5 @@ router.get('/:id', getBannerById);
 router.put('/:id', upload.single('image'), updateBanner);
 router.delete('/:id', deleteBanner);
 
-export default router;
+module.exports = router;
+

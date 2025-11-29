@@ -1,11 +1,10 @@
-import express from 'express';
-import {
-  createMusicName,
+const express = require('express');
+const { createMusicName,
   getAllMusicNames,
   getMusicNameById,
   updateMusicName,
   deleteMusicName
-} from '../controllers/musicNameController.js';
+ } = require('../controllers/musicNameController');
 
 const router = express.Router(); // ✅ You forgot this line
 
@@ -15,4 +14,5 @@ router.get('/:id', getMusicNameById);
 router.put('/:id', updateMusicName);
 router.delete('/:id', deleteMusicName);
 
-export default router;
+module.exports = router;
+

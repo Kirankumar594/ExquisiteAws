@@ -1,13 +1,8 @@
-import dotenv from "dotenv";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const dotenv = require("dotenv");
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
-
-// ES module equivalent for __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Get the base URL based on environment (localhost for local, domain for production)
@@ -16,11 +11,9 @@ const __dirname = path.dirname(__filename);
 const getBaseUrl = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   
-  if (isProduction && process.env.DOMAIN_NAME) {
+  if (isProduction) {
     // Use domain name in production
-    return process.env.DOMAIN_NAME.startsWith('http') 
-      ? process.env.DOMAIN_NAME 
-      : `https://${process.env.DOMAIN_NAME}`;
+    return "https://exquisitegroup.in"
   } else {
     // Use localhost in development
     const port = process.env.PORT || 5000;
@@ -53,7 +46,7 @@ const getFilePathFromUrl = (url) => {
  * @param {String} bucketname - Folder name within the uploads directory (optional)
  * @returns {Promise<String>} - URL of the uploaded file
  */
-export const uploadFile2 = async (file, bucketname) => {
+const uploadFile2 = async (file, bucketname) => {
   try {
     // Handle case where bucketname is not provided or is empty
     const folderName = bucketname && bucketname.trim() !== '' ? bucketname.trim() : 'default';
@@ -92,7 +85,7 @@ export const uploadFile2 = async (file, bucketname) => {
  * @param {String} url - Full URL of the file to delete
  * @returns {Promise<Object>} - Result of the delete operation
  */
-export const deleteFile = async (url) => {
+const deleteFile = async (url) => {
   try {
     const filePath = getFilePathFromUrl(url);
     
@@ -117,7 +110,7 @@ export const deleteFile = async (url) => {
  * @param {Object} newFile - New file object to upload
  * @returns {Promise<String>} - URL of the updated file
  */
-export const updateFile = async (url, newFile) => {
+const updateFile = async (url, newFile) => {
   try {
     const oldFilePath = getFilePathFromUrl(url);
     
@@ -150,7 +143,7 @@ export const updateFile = async (url, newFile) => {
  * @param {String} bucketname - Folder name within the uploads directory (optional)
  * @returns {Promise<Array<String>>} - Array of URLs of the uploaded files
  */
-export const multifileUpload = async (files, bucketname) => {
+const multifileUpload = async (files, bucketname) => {
   try {
     const uploadPromises = files.map(async (file) => {
       return await uploadFile2(file, bucketname);
@@ -163,7 +156,7 @@ export const multifileUpload = async (files, bucketname) => {
   }
 };
 
-export default { 
+module.exports = { 
   uploadFile2, 
   deleteFile, 
   updateFile, 

@@ -1,8 +1,8 @@
 
-import MusicSection from '../models/MusicSection.js';
-import fs from 'fs';
-import path from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
+const MusicSection = require('../models/MusicSection');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 
 const deleteFile = (filename) => {
@@ -11,7 +11,7 @@ const deleteFile = (filename) => {
 };
 
 // CREATE
-export const createMusicSection = async (req, res) => {
+const createMusicSection = async (req, res) => {
   try {
     const { title, musicId, type, youtubeLink } = req.body;
     const image = req.files && req.files['image'] 
@@ -48,7 +48,7 @@ const media = req.files && req.files['media']
 };
 
 // GET ALL
-export const getAllMusicSections = async (req, res) => {
+const getAllMusicSections = async (req, res) => {
   try {
     const sections = await MusicSection.find().populate('musicId', 'title');
     res.status(200).json(sections);
@@ -58,7 +58,7 @@ export const getAllMusicSections = async (req, res) => {
 };
 
 // GET BY ID
-export const getMusicSectionById = async (req, res) => {
+const getMusicSectionById = async (req, res) => {
   try {
     const section = await MusicSection.findById(req.params.id).populate('musicId', 'title');
     if (!section) return res.status(404).json({ message: 'Not found' });
@@ -69,7 +69,7 @@ export const getMusicSectionById = async (req, res) => {
 };
 
 // GET BY MUSIC ID
-export const getMusicSectionsByMusicId = async (req, res) => {
+const getMusicSectionsByMusicId = async (req, res) => {
   try {
     const { musicId } = req.params;
     const sections = await MusicSection.find({ musicId }).populate('musicId', 'title');
@@ -80,7 +80,7 @@ export const getMusicSectionsByMusicId = async (req, res) => {
 };
 
 // UPDATE
-export const updateMusicSection = async (req, res) => {
+const updateMusicSection = async (req, res) => {
   try {
     const { title, musicId, type, youtubeLink } = req.body;
     const section = await MusicSection.findById(req.params.id);
@@ -113,7 +113,7 @@ const media = req.files && req.files['media']
 };
 
 // DELETE
-export const deleteMusicSection = async (req, res) => {
+const deleteMusicSection = async (req, res) => {
   try {
     const section = await MusicSection.findByIdAndDelete(req.params.id);
     if (!section) return res.status(404).json({ message: 'Not found' });
@@ -126,3 +126,9 @@ export const deleteMusicSection = async (req, res) => {
     res.status(500).json({ message: 'Error deleting section', error });
   }
 };
+
+module.exports = { createMusicSection, getAllMusicSections, getMusicSectionById, getMusicSectionsByMusicId, updateMusicSection, deleteMusicSection };
+
+
+
+

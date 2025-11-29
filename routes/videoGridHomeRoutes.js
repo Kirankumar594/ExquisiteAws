@@ -1,14 +1,13 @@
 
 
-import express from 'express';
-import {
-  createVideoGridHome,
+const express = require('express');
+const { createVideoGridHome,
   getAllVideoGridHome,
   getVideoGridHomeById,
   updateVideoGridHome,
   deleteVideoGridHome,
-} from '../controllers/videoGridHomeController.js';
-import { uploadVideoGridHome } from '../middleware/videoGridUpload.js';
+ } = require('../controllers/videoGridHomeController');
+const { uploadVideoGridHome  } = require('../middleware/videoGridUpload');
 
 const router = express.Router();
 
@@ -18,4 +17,5 @@ router.get('/:id', getVideoGridHomeById);
 router.put('/:id', uploadVideoGridHome, updateVideoGridHome);
 router.delete('/:id', deleteVideoGridHome);
 
-export default router;
+module.exports = router;
+

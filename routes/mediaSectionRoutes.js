@@ -1,14 +1,13 @@
-import express from 'express';
-// import { upload } from '../middleware/video.js';
-import {
-  createMediaSection,
+const express = require('express');
+// const { upload  } = require('../middleware/video');
+const { createMediaSection,
   getAllMediaSections,
   getMediaSectionById,
   getMediaSectionsByPageId,
   updateMediaSection,
   deleteMediaSection
-} from '../controllers/mediaSectionController.js';
-import multer from 'multer';
+ } = require('../controllers/mediaSectionController');
+const multer = require('multer');
 
 const upload = multer();  
 
@@ -27,4 +26,5 @@ router.get('/:id', getMediaSectionById);
 router.put('/:id', uploadFields, updateMediaSection);
 router.delete('/:id', deleteMediaSection);
 
-export default router;
+module.exports = router;
+

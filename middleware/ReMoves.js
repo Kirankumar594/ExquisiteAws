@@ -1,6 +1,6 @@
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const folderPath = 'uploads/released-movies';
 if (!fs.existsSync(folderPath)) {
@@ -29,8 +29,11 @@ const fileFilter = (req, file, cb) => {
 };
 
 // ✅ Named export (correct)
-export const uploadReleasedMovie = multer({
+const uploadReleasedMovie = multer({
   storage,
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 },
 });
+
+
+module.exports = { uploadReleasedMovie };

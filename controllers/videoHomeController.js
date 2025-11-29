@@ -1,11 +1,11 @@
-import VideoHome from '../models/videoHomeModel.js';
-import fs from 'fs';
+const VideoHome = require('../models/videoHomeModel');
+const fs = require('fs');
 
-export const createVideoHome = async (req, res) => {
+const createVideoHome = async (req, res) => {
   try {
     const { title, views } = req.body;
-   const image = req.files?.image?.[0] ? await uploadFile2(req.files?.image?.[0],"upcoming"):"";
-         const video = req.files?.video?.[0] ? await uploadFile2(req.files?.video[0],"upcoming"):"";
+   const image = req.files && req.files.image && req.files.image[0] ? await uploadFile2(req.files && req.files.image && req.files.image[0],"upcoming"):"";
+         const video = req.files && req.files.video && req.files.video[0] ? await uploadFile2(req.files && req.files.video[0],"upcoming"):"";
 
     if (!image || !video) return res.status(400).json({ message: 'Image and video required' });
 
@@ -16,7 +16,7 @@ export const createVideoHome = async (req, res) => {
   }
 };
 
-export const getAllVideoHomes = async (req, res) => {
+const getAllVideoHomes = async (req, res) => {
   try {
     const data = await VideoHome.find().sort({ createdAt: -1 });
     res.json(data);
@@ -25,7 +25,7 @@ export const getAllVideoHomes = async (req, res) => {
   }
 };
 
-export const getVideoHomeById = async (req, res) => {
+const getVideoHomeById = async (req, res) => {
   try {
     const data = await VideoHome.findById(req.params.id);
     if (!data) return res.status(404).json({ message: 'Not found' });
@@ -35,20 +35,20 @@ export const getVideoHomeById = async (req, res) => {
   }
 };
 
-export const updateVideoHome = async (req, res) => {
+const updateVideoHome = async (req, res) => {
   try {
     const { title, views } = req.body;
     const existing = await VideoHome.findById(req.params.id);
     if (!existing) return res.status(404).json({ message: 'Not found' });
 
     // Delete old files if new ones uploaded
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       // fs.unlinkSync(existing.image);
-      existing.image = await uploadFile2(req.files?.image?.[0],"upcoming")
+      existing.image = await uploadFile2(req.files && req.files.image && req.files.image[0],"upcoming")
     }
-    if (req.files?.video?.[0]) {
+    if (req.files && req.files.video && req.files.video[0]) {
       // fs.unlinkSync(existing.video);
-      existing.video = await uploadFile2(req.files?.video[0],"upcoming")
+      existing.video = await uploadFile2(req.files && req.files.video[0],"upcoming")
     }
 
     existing.title = title;
@@ -61,7 +61,7 @@ export const updateVideoHome = async (req, res) => {
   }
 };
 
-export const deleteVideoHome = async (req, res) => {
+const deleteVideoHome = async (req, res) => {
   try {
     const existing = await VideoHome.findById(req.params.id);
     if (!existing) return res.status(404).json({ message: 'Not found' });
@@ -75,3 +75,9 @@ export const deleteVideoHome = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+module.exports = { createVideoHome, getAllVideoHomes, getVideoHomeById, updateVideoHome, deleteVideoHome };
+
+
+
+

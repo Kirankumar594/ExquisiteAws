@@ -1,5 +1,5 @@
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ConsultationSchema = new mongoose.Schema({
   name: {
@@ -23,4 +23,5 @@ const ConsultationSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export const Consultation = mongoose.model('Consultation', ConsultationSchema);
+const Consultation = mongoose.model('Consultation', ConsultationSchema);
+

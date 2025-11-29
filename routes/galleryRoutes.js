@@ -1,6 +1,6 @@
-import express from 'express';
-import { createGallery, getAllGallery, updateGallery, deleteGallery,getGalleryById } from '../controllers/galleryController.js';
-import multer from 'multer';
+const express = require('express');
+const { createGallery, getAllGallery, updateGallery, deleteGallery,getGalleryById  } = require('../controllers/galleryController');
+const multer = require('multer');
 
 const router = express.Router();
 const upload = multer();
@@ -12,4 +12,4 @@ router.put('/:id', upload.any(), updateGallery);
 router.delete('/:id', deleteGallery);
 router.get('/:id', getGalleryById);
 
-export default router;
+module.exports = router;

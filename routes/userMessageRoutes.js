@@ -1,5 +1,5 @@
-import express from "express"
-import { createUserMessage, getAllMessages } from "../controllers/userMessageController.js"
+const express = require('express');
+const { createUserMessage, getAllMessages  } = require('../controllers/userMessageController');
 
 const router = express.Router()
 
@@ -9,4 +9,5 @@ router.post("/", createUserMessage)
 // GET /api/user - Get all messages (for admin)
 router.get("/", getAllMessages)
 
-export default router
+module.exports = router
+

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const officeSchema = new mongoose.Schema({
   city: { type: String, required: true },
@@ -7,4 +7,5 @@ const officeSchema = new mongoose.Schema({
   image: { type: String, required: true }, // image filename or URL
 }, { timestamps: true });
 
-export const Office = mongoose.model('Office', officeSchema);
+const Office = mongoose.model('Office', officeSchema);
+

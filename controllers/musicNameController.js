@@ -1,7 +1,7 @@
-import MusicName from '../models/MusicNameModel.js';
+const MusicName = require('../models/MusicNameModel');
 
 // CREATE
-export const createMusicName = async (req, res) => {
+const createMusicName = async (req, res) => {
   try {
     const { title } = req.body;
     const newMusic = new MusicName({ title });
@@ -13,7 +13,7 @@ export const createMusicName = async (req, res) => {
 };
 
 // GET ALL
-export const getAllMusicNames = async (req, res) => {
+const getAllMusicNames = async (req, res) => {
   try {
     const Musics = await MusicName.find().sort({ createdAt: -1 });
     res.status(200).json(Musics);
@@ -23,7 +23,7 @@ export const getAllMusicNames = async (req, res) => {
 };
 
 // GET BY ID
-export const getMusicNameById = async (req, res) => {
+const getMusicNameById = async (req, res) => {
   try {
     const Music = await MusicName.findById(req.params.id);
     if (!Music) {
@@ -36,7 +36,7 @@ export const getMusicNameById = async (req, res) => {
 };
 
 // UPDATE
-export const updateMusicName = async (req, res) => {
+const updateMusicName = async (req, res) => {
   try {
     const { title } = req.body;
     const updatedMusic = await MusicName.findByIdAndUpdate(
@@ -54,7 +54,7 @@ export const updateMusicName = async (req, res) => {
 };
 
 // DELETE
-export const deleteMusicName = async (req, res) => {
+const deleteMusicName = async (req, res) => {
   try {
     const deleted = await MusicName.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -65,3 +65,9 @@ export const deleteMusicName = async (req, res) => {
     res.status(500).json({ message: 'Error deleting Music name', error });
   }
 };
+
+module.exports = { createMusicName, getAllMusicNames, getMusicNameById, updateMusicName, deleteMusicName };
+
+
+
+

@@ -1,15 +1,14 @@
-import express from 'express';
-import {
-  createVideoSection,
+const express = require('express');
+const { createVideoSection,
   getAllVideoSections,
   getVideoSectionById,
   getVideoSectionsByPage,
   updateVideoSection,
   deleteVideoSection
-} from '../controllers/videoSectionController.js';
-import multer from 'multer';
+ } = require('../controllers/videoSectionController');
+const multer = require('multer');
 
-// import { upload } from '../middleware/video.js';
+// const { upload  } = require('../middleware/video');
 const upload=multer();
 const router = express.Router();
 const uploadFields = upload;
@@ -27,4 +26,5 @@ router.put('/:id', uploadFields.fields([
   ]), updateVideoSection);
 router.delete('/:id', deleteVideoSection);
 
-export default router;
+module.exports = router;
+

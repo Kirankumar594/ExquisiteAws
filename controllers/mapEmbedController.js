@@ -1,7 +1,7 @@
-import MapEmbed from "../models/mapEmbedModel.js";
+const MapEmbed = require('../models/mapEmbedModel');
 
 // Create or Update Map Embed URL
-export const updateMapEmbed = async (req, res) => {
+const updateMapEmbed = async (req, res) => {
   try {
     const { embedUrl } = req.body;
 
@@ -20,7 +20,7 @@ export const updateMapEmbed = async (req, res) => {
 };
 
 // Get Map Embed URL
-export const getMapEmbed = async (req, res) => {
+const getMapEmbed = async (req, res) => {
   try {
     const map = await MapEmbed.findOne();
     res.status(200).json(map);
@@ -28,3 +28,9 @@ export const getMapEmbed = async (req, res) => {
     res.status(500).json({ message: "Server Error", error });
   }
 };
+
+module.exports = { updateMapEmbed, getMapEmbed };
+
+
+
+

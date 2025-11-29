@@ -1,7 +1,7 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import  Stat  from '../models/stat.js';  
-import  isAdmin  from '../middleware/authloginMiddleware.js';  
+const Stat = require('../models/stat');  
+const isAdmin = require('../middleware/authloginMiddleware');  
 
 // GET all stats (public)
 router.get('/', async (req, res) => {
@@ -50,4 +50,4 @@ router.delete('/:id', isAdmin, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

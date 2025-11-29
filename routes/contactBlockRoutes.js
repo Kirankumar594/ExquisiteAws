@@ -1,15 +1,16 @@
-import express from "express"
+const express = require('express');
 const router = express.Router();
-import {
+const {
   getAllContactBlocks,
   createContactBlock,
   updateContactBlock,
   deleteContactBlock
-} from'../controllers/contactBlockController.js';
+} = require('../controllers/contactBlockController');
 
 router.get('/', getAllContactBlocks);
 router.post('/', createContactBlock);
 router.put('/:id', updateContactBlock);
 router.delete('/:id', deleteContactBlock);
 
-export default router;
+module.exports = router;
+

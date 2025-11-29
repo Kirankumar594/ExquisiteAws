@@ -1,11 +1,11 @@
 
-import Movie from '../models/Movie.js';
-import fs from 'fs';
+const Movie = require('../models/Movie');
+const fs = require('fs');
 
-import { uploadFile2 } from '../middleware/aws.js';
+const { uploadFile2  } = require('../middleware/aws');
 
 // CREATE
-// export const createMovie = async (req, res) => {
+// const createMovie = async (req, res) => {
 //   try {
 //     const {
 //       title,
@@ -24,7 +24,7 @@ import { uploadFile2 } from '../middleware/aws.js';
 
 //     let video = "";
 //     if (type === 'file') {
-//       if (!req.files?.video?.[0]) return res.status(400).json({ error: "Type and video source are required" });
+//       if (!req.files && req.files.video && req.files.video[0]) return res.status(400).json({ error: "Type and video source are required" });
 //       video = req.files.video[0].path.replace(/\\/g, '/');
 //     } else if (type === 'youtube') {
 //       if (!youtubeLink) return res.status(400).json({ error: "Type and video source are required" });
@@ -53,7 +53,7 @@ import { uploadFile2 } from '../middleware/aws.js';
 //     res.status(500).json({ error: err.message });
 //   }
 // };
-export const createMovie = async (req, res) => {
+const createMovie = async (req, res) => {
   try {
     const {
       title,
@@ -69,14 +69,14 @@ export const createMovie = async (req, res) => {
     } = req.body;
 
     // image upload
-    const image = req.files?.image?.[0]
+    const image = req.files && req.files.image && req.files.image[0]
       ? await uploadFile2(req.files.image[0], "media")
       : "";
 
     // video handling
     let video = "";
     if (type === "file") {
-      if (!req.files?.video?.[0]) {
+      if (!req.files || !req.files.video || !req.files.video[0]) {
         return res.status(400).json({ error: "Video file is required" });
       }
       video = await uploadFile2(req.files.video[0], "media"); // ✅ use same method as update
@@ -96,7 +96,7 @@ export const createMovie = async (req, res) => {
       rating,
       releaseDate,
       status,
-      genre: genre?.split(",") || [],
+      genre: genre && genre.split(",") || [],
       duration,
       rating_score,
       type,
@@ -114,7 +114,7 @@ export const createMovie = async (req, res) => {
 
 
 // GET ALL
-export const getAllMovies = async (req, res) => {
+const getAllMovies = async (req, res) => {
   try {
     const movies = await Movie.find().sort({ createdAt: -1 });
     res.json(movies);
@@ -124,7 +124,7 @@ export const getAllMovies = async (req, res) => {
 };
 
 // GET BY ID
-export const getMovieById = async (req, res) => {
+const getMovieById = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
@@ -135,7 +135,7 @@ export const getMovieById = async (req, res) => {
 };
 
 // UPDATE
-export const updateMovie = async (req, res) => {
+const updateMovie = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
@@ -153,15 +153,13 @@ export const updateMovie = async (req, res) => {
       youtubeLink,
     } = req.body;
 
-    const image = req.files ? await uploadFile2(req.files['image'][0],"media") : movie.image;
-
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);
-      movie.image = req.files? await uploadFile2(req.files['image'][0],"media") : movie.image;
+      movie.image = await uploadFile2(req.files.image[0],"media");
     }
 
     if (type === 'file') {
-      if (req.files?.video?.[0]) {
+      if (req.files && req.files.video && req.files.video[0]) {
         if (movie.video && fs.existsSync(movie.video)) fs.unlinkSync(movie.video);
         movie.video = await uploadFile2(req.files.video[0],"media");
       }
@@ -189,7 +187,7 @@ export const updateMovie = async (req, res) => {
 };
 
 // DELETE
-export const deleteMovie = async (req, res) => {
+const deleteMovie = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
@@ -203,3 +201,9 @@ export const deleteMovie = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports = { createMovie, getAllMovies, getMovieById, updateMovie, deleteMovie };
+
+
+
+

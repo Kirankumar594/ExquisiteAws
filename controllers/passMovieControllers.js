@@ -1,14 +1,14 @@
 
 
-import PassMovie from '../models/passMovieModel.js';
-import fs from 'fs';
+const PassMovie = require('../models/passMovieModel');
+const fs = require('fs');
 
-import { uploadFile2 } from '../middleware/aws.js';
+const { uploadFile2  } = require('../middleware/aws');
 
 // CREATE
 
 
-export const createPassMovie = async (req, res) => {
+const createPassMovie = async (req, res) => {
   try {
     const { title, description, isNew, type, youtubeLink } = req.body;
 
@@ -16,12 +16,12 @@ export const createPassMovie = async (req, res) => {
     let videoFile = null;
 
     // ✅ Upload image
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       imageFile = await uploadFile2(req.files.image[0], "media");
     }
 
     // ✅ Upload video
-    if (req.files?.video?.[0]) {
+    if (req.files && req.files.video && req.files.video[0]) {
       videoFile = await uploadFile2(req.files.video[0], "media");
     }
 
@@ -44,7 +44,7 @@ export const createPassMovie = async (req, res) => {
     const newMovie = new PassMovie({
       title,
       description,
-      isNew: isNew === "true" || isNew === true,
+      isNewFlag: isNew === "true" || isNew === true,
       image: imageFile, // store S3 URL
       video: videoSource, // store S3 URL or YouTube link
       type,
@@ -60,29 +60,29 @@ export const createPassMovie = async (req, res) => {
 
 
 // UPDATE
-export const updatePassMovie = async (req, res) => {
+const updatePassMovie = async (req, res) => {
   try {
     const movie = await PassMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
     const { title, description, isNew, type, youtubeLink } = req.body;
 
-    if (req.files?.image?.[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
       if (fs.existsSync(movie.image)) fs.unlinkSync(movie.image);
       movie.image = await uploadFile2(req.files['image'][0],"media");
     }
 
-    if (type === 'file' && req.files?.video?.[0]) {
+    if (type === 'file' && req.files && req.files.video && req.files.video[0]) {
       if (fs.existsSync(movie.video)) fs.unlinkSync(movie.video);
       movie.video = await uploadFile2(req.files['video'][0],"media");
     }
 
-    movie.title = title ?? movie.title;
-    movie.description = description ?? movie.description;
-    movie.isNew = isNew === 'true' || isNew === true;
+    movie.title = title || movie.title;
+    movie.description = description || movie.description;
+    movie.isNewFlag = isNew === 'true' || isNew === true;
     movie.type = type;
 
-    movie.video = type === 'youtube' ? youtubeLink : (req.files?.video?.[0]?.path ?? movie.video);
+    movie.video = type === 'youtube' ? youtubeLink : ((req.files && req.files.video && req.files.video[0] && req.files.video[0].path) || movie.video);
 
     const updated = await movie.save();
     res.json(updated);
@@ -94,7 +94,7 @@ export const updatePassMovie = async (req, res) => {
 
 
 // DELETE
-export const deletePassMovie = async (req, res) => {
+const deletePassMovie = async (req, res) => {
   try {
     const movie = await PassMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
@@ -110,7 +110,7 @@ export const deletePassMovie = async (req, res) => {
 };
 
 // GET ALL
-export const getAllPassMovies = async (req, res) => {
+const getAllPassMovies = async (req, res) => {
   try {
     const movies = await PassMovie.find().sort({ createdAt: -1 });
     res.json(movies);
@@ -121,7 +121,7 @@ export const getAllPassMovies = async (req, res) => {
 
 
 // GET BY ID
-export const getPassMovieById = async (req, res) => {
+const getPassMovieById = async (req, res) => {
   try {
     const movie = await PassMovie.findById(req.params.id);
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
@@ -130,3 +130,9 @@ export const getPassMovieById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+module.exports = { createPassMovie, updatePassMovie, deletePassMovie, getAllPassMovies, getPassMovieById };
+
+
+
+

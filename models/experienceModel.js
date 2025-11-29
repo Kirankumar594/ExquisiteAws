@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const experienceSchema = new mongoose.Schema({
   name: {
@@ -23,4 +23,5 @@ const experienceSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model('ExperienceCenter', experienceSchema);
+module.exports = mongoose.model('ExperienceCenter', experienceSchema);
+

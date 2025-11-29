@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const pageNameSchema = new mongoose.Schema(
   {
@@ -11,4 +11,5 @@ const pageNameSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('PageName', pageNameSchema);
+module.exports = mongoose.model('PageName', pageNameSchema);
+

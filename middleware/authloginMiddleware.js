@@ -1,6 +1,5 @@
-
-import  jwt  from 'jsonwebtoken';
-import Admin from '../models/adminModel.js';
+const jwt = require('jsonwebtoken');
+const Admin = require('../models/adminModel');
 
 const isAdmin = async (req, res, next) => {
   let token;
@@ -28,4 +27,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-export default isAdmin
+module.exports = isAdmin;

@@ -1,9 +1,10 @@
-import express from "express";
-import { updateMapEmbed, getMapEmbed } from "../controllers/mapEmbedController.js";
+const express = require('express');
+const { updateMapEmbed, getMapEmbed  } = require('../controllers/mapEmbedController');
 
 const router = express.Router();
 
 router.get("/", getMapEmbed);
 router.post("/", updateMapEmbed); // or use PUT
 
-export default router;
+module.exports = router;
+

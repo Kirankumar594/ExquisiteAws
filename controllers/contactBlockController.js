@@ -1,7 +1,7 @@
-import {ContactBlock }from '../models/ContactBlock.js';
+const {ContactBlock } = require('../models/ContactBlock');
 
 // GET all
-export const getAllContactBlocks = async (req, res) => {
+const getAllContactBlocks = async (req, res) => {
   try {
     const blocks = await ContactBlock.find();
     res.json(blocks);
@@ -11,7 +11,7 @@ export const getAllContactBlocks = async (req, res) => {
 };
 
 // CREATE
-export const createContactBlock = async (req, res) => {
+const createContactBlock = async (req, res) => {
   const { title, icon, lines } = req.body;
 
   try {
@@ -24,7 +24,7 @@ export const createContactBlock = async (req, res) => {
 };
 
 // UPDATE
-export const updateContactBlock = async (req, res) => {
+const updateContactBlock = async (req, res) => {
   const { id } = req.params;
   const { title, icon, lines } = req.body;
 
@@ -41,7 +41,7 @@ export const updateContactBlock = async (req, res) => {
 };
 
 // DELETE
-export const deleteContactBlock = async (req, res) => {
+const deleteContactBlock = async (req, res) => {
   const { id } = req.params;
   try {
     await ContactBlock.findByIdAndDelete(id);
@@ -50,3 +50,9 @@ export const deleteContactBlock = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+module.exports = { getAllContactBlocks, createContactBlock, updateContactBlock, deleteContactBlock };
+
+
+
+

@@ -1,6 +1,6 @@
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const uploadPath = 'uploads/media';
 if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
@@ -20,4 +20,7 @@ const fileFilter = (req, file, cb) => {
   else cb(new Error('Only image/video/audio files are allowed!'));
 };
 
-export const upload = multer({ storage, fileFilter });
+const upload = multer({ storage, fileFilter });
+
+
+module.exports = upload;

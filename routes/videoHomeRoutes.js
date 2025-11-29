@@ -1,14 +1,13 @@
-import express from 'express';
-import {
-  createVideoHome,
+const express = require('express');
+const { createVideoHome,
   getAllVideoHomes,
   getVideoHomeById,
   updateVideoHome,
   deleteVideoHome,
-} from '../controllers/videoHomeController.js';
-import multer from 'multer';
+ } = require('../controllers/videoHomeController');
+const multer = require('multer');
 
-// import { upload } from '../middleware/homeVideo.js';
+// const { upload  } = require('../middleware/homeVideo');
 
 const router = express.Router();
 const upload=multer()
@@ -24,4 +23,5 @@ router.get('/:id', getVideoHomeById);
 router.put('/:id', uploadFields, updateVideoHome);
 router.delete('/:id', deleteVideoHome);
 
-export default router;
+module.exports = router;
+

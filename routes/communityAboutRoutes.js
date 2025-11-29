@@ -1,12 +1,11 @@
 // routes/communityAboutRoutes.js
-import express from "express"
-import {
-  createCommunityAbout,
+const express = require('express');
+const { createCommunityAbout,
   getCommunityAbout,
   deleteCommunityAbout,
   updateCommunityAbout,
-} from "../controllers/communityAboutController.js"
-import multer from "multer"
+ } = require('../controllers/communityAboutController');
+const multer = require('multer');
 
 const router = express.Router()
 const upload = multer()
@@ -17,4 +16,5 @@ router.delete("/:id", deleteCommunityAbout)
 // For updating, allow up to 3 images, controller will validate exact 3
 router.put("/:id", upload.array("images", 3), updateCommunityAbout)
 
-export default router
+module.exports = router
+

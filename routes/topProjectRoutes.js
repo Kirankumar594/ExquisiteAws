@@ -1,12 +1,11 @@
-import express from 'express';
-import multer from 'multer';
-import {
-  createTopProject,
+const express = require('express');
+const multer = require('multer');
+const { createTopProject,
   getTopProjects,
   getTopProjectById,
   updateTopProject,
   deleteTopProject,
-} from '../controllers/topProjectController.js';
+ } = require('../controllers/topProjectController');
 
 const router = express.Router();
 
@@ -30,4 +29,5 @@ router.get('/:id', getTopProjectById);
 router.put('/:id', upload.single('image'), updateTopProject);
 router.delete('/:id', deleteTopProject);
 
-export default router;
+module.exports = router;
+

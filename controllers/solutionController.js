@@ -1,14 +1,10 @@
-import Solution from '../models/SolutionModel.js';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const Solution = require('../models/SolutionModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Create Solution
-export const createSolution = async (req, res) => {
+const createSolution = async (req, res) => {
   try {
     const { name } = req.body;
     const image = req.file? await uploadFile2(req.file,"solution"):"";
@@ -26,7 +22,7 @@ export const createSolution = async (req, res) => {
 };
 
 // Get all solutions
-export const getSolutions = async (req, res) => {
+const getSolutions = async (req, res) => {
   try {
     const solutions = await Solution.find().sort({ createdAt: -1 });
     res.status(200).json(solutions);
@@ -36,7 +32,7 @@ export const getSolutions = async (req, res) => {
 };
 
 // Delete solution
-export const deleteSolution = async (req, res) => {
+const deleteSolution = async (req, res) => {
   try {
     const solution = await Solution.findByIdAndDelete(req.params.id);
     if (!solution) {
@@ -51,7 +47,7 @@ export const deleteSolution = async (req, res) => {
   }
 };
 // Update solution
-export const updateSolution = async (req, res) => {
+const updateSolution = async (req, res) => {
   try {
     const { name } = req.body;
     const solution = await Solution.findById(req.params.id);
@@ -74,3 +70,9 @@ export const updateSolution = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+module.exports = { createSolution, getSolutions, deleteSolution, updateSolution };
+
+
+
+

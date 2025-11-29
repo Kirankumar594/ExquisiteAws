@@ -1,13 +1,12 @@
 
-import express from 'express';
-import {
-  createReleasedMovie,
+const express = require('express');
+const { createReleasedMovie,
   getAllReleasedMovies,
   getReleasedMovieById,
   updateReleasedMovie,
   deleteReleasedMovie,
-} from '../controllers/releasedMovieControllers.js';
-import { uploadReleasedMovie } from '../middleware/RehdVodeo.js';
+ } = require('../controllers/releasedMovieControllers');
+const { uploadReleasedMovie  } = require('../middleware/RehdVodeo');
 
 const router = express.Router();
 
@@ -17,4 +16,4 @@ router.get('/:id', getReleasedMovieById);
 router.put('/:id', uploadReleasedMovie, updateReleasedMovie);
 router.delete('/:id', deleteReleasedMovie);
 
-export default router;
+module.exports = router;

@@ -1,15 +1,10 @@
-import InteriorBanner from '../models/InteriorBannerModel.js';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import path from "path"
-import { uploadFile2 } from '../middleware/aws.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const InteriorBanner = require('../models/InteriorBannerModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // Create Interior Banner
-export const createInteriorBanner = async (req, res) => {
+const createInteriorBanner = async (req, res) => {
   try {
     const { title, description } = req.body;
     const image = await uploadFile2(req.file);
@@ -27,7 +22,7 @@ export const createInteriorBanner = async (req, res) => {
 };
 
 // Get all Interior Banners
-export const getInteriorBanners = async (req, res) => {
+const getInteriorBanners = async (req, res) => {
   try {
     const banners = await InteriorBanner.find().sort({ createdAt: -1 });
     res.status(200).json(banners);
@@ -37,7 +32,7 @@ export const getInteriorBanners = async (req, res) => {
 };
 
 // Delete Interior Banner
-export const deleteInteriorBanner = async (req, res) => {
+const deleteInteriorBanner = async (req, res) => {
   try {
     const banner = await InteriorBanner.findByIdAndDelete(req.params.id);
     if (!banner) {
@@ -54,7 +49,7 @@ export const deleteInteriorBanner = async (req, res) => {
 };
 
 
-export const updateInteriorBanner = async (req, res) => {
+const updateInteriorBanner = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description } = req.body;
@@ -82,3 +77,9 @@ export const updateInteriorBanner = async (req, res) => {
     });
   }
 };
+
+module.exports = { createInteriorBanner, getInteriorBanners, deleteInteriorBanner, updateInteriorBanner };
+
+
+
+

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const mediaSectionSchema = new mongoose.Schema(
   {
@@ -11,4 +11,5 @@ const mediaSectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('MediaSection', mediaSectionSchema);
+module.exports = mongoose.model('MediaSection', mediaSectionSchema);
+

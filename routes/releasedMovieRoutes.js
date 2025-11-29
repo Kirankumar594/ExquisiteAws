@@ -1,13 +1,12 @@
-import express from 'express';
-import {
-  createReleasedMovie,
+const express = require('express');
+const { createReleasedMovie,
   getAllReleasedMovies,
   getReleasedMovieById,
   updateReleasedMovie,
   deleteReleasedMovie,
-} from '../controllers/releasedMovieController.js';
-import multer from 'multer';
-// import { uploadReleasedMovie } from '../middleware/ReMoves.js';
+ } = require('../controllers/releasedMovieController');
+const multer = require('multer');
+// const { uploadReleasedMovie  } = require('../middleware/ReMoves');
 
 const router = express.Router();
 const uploadReleasedMovie=multer()
@@ -35,4 +34,5 @@ router.put(
 
 router.delete('/:id', deleteReleasedMovie);
 
-export default router;
+module.exports = router;
+

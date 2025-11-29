@@ -1,12 +1,11 @@
-import express from 'express';
-// import {upload} from '../middleware/upload.js'; // your multer config
-import {
-  createInteriorBanner,
+const express = require('express');
+// const { upload } = require('../middleware/upload'); // your multer config
+const { createInteriorBanner,
   getInteriorBanners,
   updateInteriorBanner,
   deleteInteriorBanner
-} from '../controllers/InteriorBannerController.js';
-import multer from 'multer';
+ } = require('../controllers/InteriorBannerController');
+const multer = require('multer');
 
 const router = express.Router();
 const upload=multer();
@@ -15,4 +14,4 @@ router.get('/', getInteriorBanners);
 router.delete('/:id', deleteInteriorBanner);
 router.patch('/:id', upload.single('image'), updateInteriorBanner);
 
-export default router;
+module.exports = router;

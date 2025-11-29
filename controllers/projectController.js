@@ -1,9 +1,9 @@
-import Project from "../models/projectModel.js";
-import fs from "fs";
-import path from "path";
-import { uploadFile2 } from "../middleware/aws.js";
+const Project = require('../models/projectModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
-export const createProject = async (req, res) => {
+const createProject = async (req, res) => {
   try {
     const {
       category,
@@ -52,7 +52,7 @@ export const createProject = async (req, res) => {
 };
 
 // GET All Projects
-export const getAllProjects = async (req, res) => {
+const getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
     res.status(200).json(projects);
@@ -62,7 +62,7 @@ export const getAllProjects = async (req, res) => {
   }
 };
 
-export const updateProject = async (req, res) => {
+const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -138,7 +138,7 @@ export const updateProject = async (req, res) => {
 };
 
 // DELETE Project
-export const deleteProject = async (req, res) => {
+const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -164,3 +164,9 @@ export const deleteProject = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+module.exports = { createProject, getAllProjects, updateProject, deleteProject };
+
+
+
+

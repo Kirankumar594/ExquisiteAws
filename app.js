@@ -1,40 +1,34 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import bannerRoutes from './routes/bannerRoutes.js';
-import propertyRoute from './routes/propertyRoutes.js';
-import topProjectRoutes from './routes/topProjectRoutes.js';
-import clientRoutes from "./routes/clientRoutes.js";
-import galleryRoutes from './routes/galleryRoutes.js';
-import projectRoute from "./routes/projectRoutes.js";
-import userRoute from "./routes/userMessageRoutes.js";
-import BannerAboutR from './routes/BannerAboutR.js';
-import communityAboutRoutes from './routes/communityAboutRoutes.js';
-import interiorbanner from "./routes/InteriorBannerRoute.js"
-import solutionRoutes from './routes/solutionRoutes.js';
-import experienceRoutes from './routes/experienceRoutes.js';
-import interiorPortfolioRoutes from './routes/interiorPortfolioRoutes.js';
-import adminRoutes from './routes/adminRoutes.js'
-// import bannerRoutes from './routes/bannerRoutes.js';
-import pageNameRoutes from './routes/pageNameRoutes.js'
-import mediaSectionRoutes from './routes/mediaSectionRoutes.js'
-import productionRoutes from './routes/productionRoutes.js'
-import movieRoutes from './routes/movieRoutes.js'
-import releasedMovieRoutese from './routes/releasedMovieRoutese.js'
-import videoGridHomeRoutes from './routes/videoGridHomeRoutes.js'
-import contactInfoRoutes from './routes/contactInfoRoutes.js';
-import mapEmbedRoutes from './routes/mapEmbedRoutes.js';
-import upcomingMovieRoutes from './routes/upcomingMovieRoutes.js';
-import passMovieRoutes from './routes/passMovieRoutes.js'
-import musicNameRoutes from './routes/musicNameRoutes.js'
-import musicSectionRoutes from './routes/musicSectionRoutes.js'
-
-// ES module equivalent for __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+const cors = require('cors');
+const path = require('path');
+const bannerRoutes = require('./routes/bannerRoutes');
+const propertyRoute = require('./routes/propertyRoutes');
+const topProjectRoutes = require('./routes/topProjectRoutes');
+const clientRoutes = require("./routes/clientRoutes");
+const galleryRoutes = require('./routes/galleryRoutes');
+const projectRoute = require("./routes/projectRoutes");
+const userRoute = require("./routes/userMessageRoutes");
+const BannerAboutR = require('./routes/BannerAboutR');
+const communityAboutRoutes = require('./routes/communityAboutRoutes');
+const interiorbanner = require("./routes/InteriorBannerRoute");
+const solutionRoutes = require('./routes/solutionRoutes');
+const experienceRoutes = require('./routes/experienceRoutes');
+const interiorPortfolioRoutes = require('./routes/interiorPortfolioRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const pageNameRoutes = require('./routes/pageNameRoutes');
+const mediaSectionRoutes = require('./routes/mediaSectionRoutes');
+const productionRoutes = require('./routes/productionRoutes');
+const movieRoutes = require('./routes/movieRoutes');
+const releasedMovieRoutese = require('./routes/releasedMovieRoutese');
+const videoGridHomeRoutes = require('./routes/videoGridHomeRoutes');
+const contactInfoRoutes = require('./routes/contactInfoRoutes');
+const mapEmbedRoutes = require('./routes/mapEmbedRoutes');
+const upcomingMovieRoutes = require('./routes/upcomingMovieRoutes');
+const passMovieRoutes = require('./routes/passMovieRoutes');
+const musicNameRoutes = require('./routes/musicNameRoutes');
+const musicSectionRoutes = require('./routes/musicSectionRoutes');
 
 dotenv.config();
 connectDB();
@@ -43,20 +37,25 @@ const app = express();
 
 // Middleware
 app.use(express.json()); 
+
+// CORS Configuration - Allow all origins
 app.use(cors());
+
+// Handle preflight requests
+app.options('*', cors());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // To serve images
 app.use('/uploads/office-images', express.static(path.join(__dirname, 'uploads/office-images')));
 
 // Import routes
-import adminloginRoutes from './routes/adminloginRoutes.js';
-import statRoutes from './routes/statRoutes.js';
-import investmentRoutes from './routes/investmentRoutes.js';
-import contactBlockRoutes from './routes/contactBlockRoutes.js';
-import contactRoutes from './routes/contactRoutes.js';
-import consultationRoutes from './routes/consultationRoutes.js';
-import teamRoutes from './routes/teamRoutes.js';
-import officeRoutes from './routes/officeRoutes.js';
+const adminloginRoutes = require('./routes/adminloginRoutes');
+const statRoutes = require('./routes/statRoutes');
+const investmentRoutes = require('./routes/investmentRoutes');
+const contactBlockRoutes = require('./routes/contactBlockRoutes');
+const contactRoutes = require('./routes/contactRoutes');
+const consultationRoutes = require('./routes/consultationRoutes');
+const teamRoutes = require('./routes/teamRoutes');
+const officeRoutes = require('./routes/officeRoutes');
 
 // Use routes
 app.use('/api/admins', adminloginRoutes);
@@ -108,10 +107,9 @@ app.get("*", (req, res) => {
   return  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-// Start server
-const PORT = process.env.PORT;
+// Start server (use default port 5000 when PORT is not set)
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
-});
-
-export default app;
+  console.log(`Server is running on http://localhost:${PORT}`);
+});     
+module.exports = app; 

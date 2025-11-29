@@ -1,11 +1,11 @@
-import express from 'express'
+const express = require('express');
 const router = express.Router();
-import {Office} from '../models/Office.js';
-// import {upload} from '../middleware/officeUpload.js';
-import path from 'path';
+const { Office } = require('../models/Office');
+// const { upload } = require('../middleware/officeUpload');
+const path = require('path');
 
-import multer from 'multer';
-import { uploadFile2 } from '../middleware/aws.js';
+const multer = require('multer');
+const { uploadFile2  } = require('../middleware/aws');
 const upload=multer();
 // Add office (POST)
 router.post('/', upload.single('image'), async (req, res) => {
@@ -44,4 +44,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-export default router
+module.exports = router
+

@@ -1,10 +1,10 @@
-import ExperienceCenter from '../models/experienceModel.js';
-import fs from 'fs';
-import path from 'path';
-import { uploadFile2 } from '../middleware/aws.js';
+const ExperienceCenter = require('../models/experienceModel');
+const fs = require('fs');
+const path = require('path');
+const { uploadFile2  } = require('../middleware/aws');
 
 // CREATE
-export const createExperience = async (req, res) => {
+const createExperience = async (req, res) => {
   try {
     const { name, address, timing, experience } = req.body;
     const image = req.file ? await uploadFile2(req.file,"experience"):"";
@@ -23,7 +23,7 @@ export const createExperience = async (req, res) => {
 };
 
 // GET
-export const getAllExperiences = async (req, res) => {
+const getAllExperiences = async (req, res) => {
   try {
     const data = await ExperienceCenter.find().sort({ createdAt: -1 });
     res.status(200).json(data);
@@ -33,7 +33,7 @@ export const getAllExperiences = async (req, res) => {
 };
 
 // DELETE
-export const deleteExperience = async (req, res) => {
+const deleteExperience = async (req, res) => {
   try {
     const id = req.params.id;
     const center = await ExperienceCenter.findById(id);
@@ -50,7 +50,7 @@ export const deleteExperience = async (req, res) => {
 
 
 // UPDATE
-export const updateExperience = async (req, res) => {
+const updateExperience = async (req, res) => {
   try {
     const { name, address, timing, experience } = req.body;
     const id = req.params.id;
@@ -77,3 +77,9 @@ export const updateExperience = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+module.exports = { createExperience, getAllExperiences, deleteExperience, updateExperience };
+
+
+
+
