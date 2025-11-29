@@ -21,3 +21,4 @@ const contactBlockSchema = new mongoose.Schema(
 
 const ContactBlock = mongoose.model('ContactBlock', contactBlockSchema);
 
+module.exports = { ContactBlock };

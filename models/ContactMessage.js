@@ -15,3 +15,5 @@ const contactMessageSchema = new mongoose.Schema(
 
 const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema);
 
+
+module.exports = { ContactMessage };

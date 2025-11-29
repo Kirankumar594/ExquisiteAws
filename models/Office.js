@@ -9,3 +9,5 @@ const officeSchema = new mongoose.Schema({
 
 const Office = mongoose.model('Office', officeSchema);
 
+
+module.exports = { Office };
